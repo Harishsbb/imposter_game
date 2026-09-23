@@ -1,7 +1,7 @@
 import { useGameStore } from '../store/gameStore';
 import { CATEGORIES, CATEGORY_EMOJIS } from '../data/words';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Users, Check, Sparkles, Timer } from 'lucide-react';
+import { ArrowLeft, Users, Check, Sparkles, Timer, Lightbulb, EyeOff } from 'lucide-react';
 
 export const CreateGame = () => {
   const { settings, updateSettings, setPhase } = useGameStore();
@@ -228,6 +228,63 @@ export const CreateGame = () => {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Impostor Hint Toggle Setting */}
+        <div className="glass-card p-4 rounded-2xl border border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base border transition-all ${
+                settings.showImpostorHint
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+              }`}
+            >
+              {settings.showImpostorHint ? <Lightbulb size={18} /> : <EyeOff size={18} />}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-xs font-bold text-white">Impostor Category Hint</h4>
+                <span
+                  className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full ${
+                    settings.showImpostorHint
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                      : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                  }`}
+                >
+                  {settings.showImpostorHint ? 'Enabled 💡' : 'Hidden 🔒'}
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400">
+                {settings.showImpostorHint
+                  ? 'Impostor sees category (e.g. "Food")'
+                  : 'Blind mode: Impostor receives 0 hints'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => updateSettings({ showImpostorHint: !settings.showImpostorHint })}
+            aria-label="Toggle Impostor Hint"
+            className={`relative w-13 h-7 rounded-full transition-colors p-0.5 border flex items-center cursor-pointer ${
+              settings.showImpostorHint
+                ? 'bg-amber-500/30 border-amber-400/80 shadow-md shadow-amber-500/20'
+                : 'bg-slate-800 border-white/10'
+            }`}
+          >
+            <motion.div
+              animate={{ x: settings.showImpostorHint ? 22 : 0 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-md ${
+                settings.showImpostorHint
+                  ? 'bg-amber-400 text-slate-950 font-black'
+                  : 'bg-slate-600 text-slate-300'
+              }`}
+            >
+              {settings.showImpostorHint ? '✓' : '✕'}
+            </motion.div>
+          </button>
         </div>
 
         {/* Submit to Lobby */}

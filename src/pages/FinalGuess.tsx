@@ -12,6 +12,7 @@ export const FinalGuess = () => {
     activeWord,
     clues,
     submitFinalGuess,
+    settings,
   } = useGameStore();
 
   const [guessInput, setGuessInput] = useState('');
@@ -43,7 +44,7 @@ export const FinalGuess = () => {
             <KeyRound size={13} /> The Impostor's Last Stand
           </span>
           <span className="text-xs font-bold text-slate-400">
-            Category: {activeWord.category}
+            {settings.showImpostorHint ? `Category: ${activeWord.category}` : 'Category: Hidden 🔒'}
           </span>
         </div>
 

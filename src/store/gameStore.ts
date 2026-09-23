@@ -11,6 +11,7 @@ interface GameStoreActions {
   updatePlayerName: (id: string, name: string) => void;
   populateDefaultPlayers: (count?: number) => void;
   toggleSound: () => void;
+  toggleImpostorHint: () => void;
   
   // Game lifecycle
   startNewGame: () => void;
@@ -31,6 +32,7 @@ const initialSettings: GameSettings = {
   difficulty: 'easy',
   gameMode: 'classic',
   discussionTimerSeconds: 60,
+  showImpostorHint: true,
 };
 
 const initialPlayers: Player[] = [
@@ -145,6 +147,17 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
 
   toggleSound: () => {
     set((state) => ({ soundEnabled: !state.soundEnabled }));
+  },
+
+  toggleImpostorHint: () => {
+    const { settings, soundEnabled } = get();
+    playClickSound(soundEnabled);
+    set({
+      settings: {
+        ...settings,
+        showImpostorHint: !settings.showImpostorHint,
+      }
+    });
   },
 
   startNewGame: () => {

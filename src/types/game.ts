@@ -50,6 +50,7 @@ export interface GameSettings {
   difficulty: 'easy';
   gameMode: 'classic';
   discussionTimerSeconds: number;
+  showImpostorHint: boolean;
 }
 
 export interface GameState {

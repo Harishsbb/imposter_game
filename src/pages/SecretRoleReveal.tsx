@@ -14,6 +14,7 @@ export const SecretRoleReveal = () => {
     impostorId,
     nextRoleReveal,
     soundEnabled,
+    settings,
   } = useGameStore();
 
   const [isRevealed, setIsRevealed] = useState(false);
@@ -120,13 +121,30 @@ export const SecretRoleReveal = () => {
                     YOU ARE THE IMPOSTOR
                   </h3>
 
-                  <div className="p-4 rounded-2xl bg-rose-950/50 border border-rose-500/30 max-w-xs text-center">
-                    <p className="text-sm font-semibold text-rose-200 mb-1">
+                  <div className="p-4 rounded-2xl bg-rose-950/50 border border-rose-500/30 max-w-xs text-center w-full">
+                    <p className="text-sm font-semibold text-rose-200 mb-2">
                       You don't know the secret word.
                     </p>
-                    <p className="text-xs text-slate-300">
-                      Category Hint: <span className="font-bold text-amber-300">{activeWord.category}</span>
-                    </p>
+
+                    {settings.showImpostorHint ? (
+                      <div className="bg-black/30 p-2.5 rounded-xl border border-amber-500/20">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-slate-300">Category Hint:</span>
+                          <span className="font-extrabold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/40">
+                            {activeWord.category}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-black/40 p-2.5 rounded-xl border border-rose-500/20 text-xs">
+                        <div className="flex items-center justify-center gap-1.5 text-rose-300/80 font-bold">
+                          <span>🔒 Category Hint: Hidden</span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 mt-1">
+                          Hardcore mode is ON: Guess purely from others' clues!
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <p className="text-xs text-slate-400 max-w-xs leading-relaxed">

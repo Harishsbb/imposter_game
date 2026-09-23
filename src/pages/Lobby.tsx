@@ -4,10 +4,20 @@ import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { SUGGESTED_NAMES } from '../utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle } from 'lucide-react';
+import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff } from 'lucide-react';
 
 export const Lobby = () => {
-  const { players, addPlayer, removePlayer, updatePlayerName, populateDefaultPlayers, startNewGame, setPhase } = useGameStore();
+  const {
+    players,
+    addPlayer,
+    removePlayer,
+    updatePlayerName,
+    populateDefaultPlayers,
+    startNewGame,
+    setPhase,
+    settings,
+    toggleImpostorHint,
+  } = useGameStore();
   const [newPlayerName, setNewPlayerName] = useState('');
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
@@ -220,6 +230,64 @@ export const Lobby = () => {
           className="text-purple-400 hover:text-purple-300 font-semibold underline underline-offset-2"
         >
           Reset to default 4
+        </button>
+      </div>
+
+      {/* Impostor Hint Enable/Hide Option Card */}
+      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-5 flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-lg border transition-all ${
+              settings.showImpostorHint
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+            }`}
+          >
+            {settings.showImpostorHint ? <Lightbulb size={22} /> : <EyeOff size={22} />}
+          </div>
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <h4 className="text-sm font-extrabold text-white">Impostor Hint</h4>
+              <span
+                className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                  settings.showImpostorHint
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                }`}
+              >
+                {settings.showImpostorHint ? 'Enabled 💡' : 'Hidden 🔒'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-0.5 max-w-[240px] sm:max-w-xs">
+              {settings.showImpostorHint
+                ? 'Impostor sees category hint (e.g. "Food") to blend in'
+                : 'Hardcore blind mode: Impostor receives 0 hints!'}
+            </p>
+          </div>
+        </div>
+
+        {/* Toggle Switch */}
+        <button
+          type="button"
+          onClick={toggleImpostorHint}
+          aria-label="Toggle Impostor Hint Option"
+          className={`relative w-14 h-8 rounded-full transition-colors p-1 border flex items-center cursor-pointer ${
+            settings.showImpostorHint
+              ? 'bg-amber-500/30 border-amber-400/80 shadow-md shadow-amber-500/20'
+              : 'bg-slate-800 border-white/10'
+          }`}
+        >
+          <motion.div
+            animate={{ x: settings.showImpostorHint ? 24 : 0 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md ${
+              settings.showImpostorHint
+                ? 'bg-amber-400 text-slate-950 font-black'
+                : 'bg-slate-600 text-slate-300'
+            }`}
+          >
+            {settings.showImpostorHint ? '✓' : '✕'}
+          </motion.div>
         </button>
       </div>
 
