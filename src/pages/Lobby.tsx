@@ -269,25 +269,21 @@ export const Lobby = () => {
         {/* Toggle Switch */}
         <button
           type="button"
+          role="switch"
+          aria-checked={settings.showImpostorHint}
           onClick={toggleImpostorHint}
           aria-label="Toggle Impostor Hint Option"
-          className={`relative w-14 h-8 rounded-full transition-colors p-1 border flex items-center cursor-pointer ${
-            settings.showImpostorHint
-              ? 'bg-amber-500/30 border-amber-400/80 shadow-md shadow-amber-500/20'
-              : 'bg-slate-800 border-white/10'
+          className={`relative inline-flex h-8 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+            settings.showImpostorHint ? 'bg-amber-500 shadow-lg shadow-amber-500/30' : 'bg-slate-700'
           }`}
         >
-          <motion.div
-            animate={{ x: settings.showImpostorHint ? 24 : 0 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md ${
-              settings.showImpostorHint
-                ? 'bg-amber-400 text-slate-950 font-black'
-                : 'bg-slate-600 text-slate-300'
+          <span
+            className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out flex items-center justify-center text-xs font-black ${
+              settings.showImpostorHint ? 'translate-x-6 text-amber-600' : 'translate-x-0 text-slate-500'
             }`}
           >
             {settings.showImpostorHint ? '✓' : '✕'}
-          </motion.div>
+          </span>
         </button>
       </div>
 
