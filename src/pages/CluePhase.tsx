@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, MessageSquare, AlertCircle, Lock, ArrowRight } from 'lucide-react';
+import { Send, MessageSquare, AlertCircle, Lock, ArrowRight, Vote, Sparkles } from 'lucide-react';
 
 export const CluePhase = () => {
   const {
@@ -11,6 +11,9 @@ export const CluePhase = () => {
     currentCluePlayerIndex,
     clues,
     submitClue,
+    startVoting,
+    activeWord,
+    impostorId,
   } = useGameStore();
 
   const [clueInput, setClueInput] = useState('');
@@ -20,13 +23,24 @@ export const CluePhase = () => {
   if (!currentPlayer) return null;
 
   const isLastPlayer = currentCluePlayerIndex === players.length - 1;
+  const isImpostor = currentPlayer.id === impostorId;
+
+  // Helpful quick clue suggestions
+  const suggestions = isImpostor
+    ? ['Everyday', 'Popular', 'Useful', 'Spoke Aloud 🗣️']
+    : (activeWord?.relatedWords ? [...activeWord.relatedWords, 'Spoke Aloud 🗣️'] : ['Spoke Aloud 🗣️']);
+
+  const handleSelectSuggestion = (word: string) => {
+    setClueInput(word);
+    setErrorMessage('');
+  };
 
   const handleSubmit = (e?: FormEvent) => {
     if (e) e.preventDefault();
     const trimmed = clueInput.trim();
 
     if (!trimmed) {
-      setErrorMessage('Clue cannot be empty! Enter at least one word.');
+      setErrorMessage('Enter a clue, tap a suggestion below, or click "Skip to Voting"');
       return;
     }
 
@@ -48,9 +62,22 @@ export const CluePhase = () => {
           <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 flex items-center gap-1.5">
             <MessageSquare size={13} /> Clue Phase
           </span>
-          <span className="text-xs font-bold text-slate-400">
-            Turn {currentCluePlayerIndex + 1} of {players.length}
-          </span>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-400">
+              Turn {currentCluePlayerIndex + 1} of {players.length}
+            </span>
+
+            {/* Direct Skip to Voting Button */}
+            <button
+              onClick={startVoting}
+              className="text-xs px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold border border-rose-500/30 transition-all flex items-center gap-1 active:scale-95"
+              title="Skip remaining clues and start voting immediately"
+            >
+              <Vote size={13} />
+              <span>Go to Voting ➔</span>
+            </button>
+          </div>
         </div>
 
         <div className="text-center mb-6">
@@ -105,6 +132,23 @@ export const CluePhase = () => {
               </div>
             </div>
 
+            {/* Quick 1-tap Suggestion Chips */}
+            <div className="flex items-center justify-center gap-1.5 flex-wrap pt-1">
+              <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
+                <Sparkles size={11} className="text-amber-400" /> Tap to use:
+              </span>
+              {suggestions.map((sug) => (
+                <button
+                  key={sug}
+                  type="button"
+                  onClick={() => handleSelectSuggestion(sug)}
+                  className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-purple-900/40 text-purple-200 hover:text-white border border-white/10 active:scale-95 transition-all"
+                >
+                  {sug}
+                </button>
+              ))}
+            </div>
+
             {errorMessage && (
               <p className="text-xs text-rose-400 font-semibold flex items-center justify-center gap-1.5 animate-pulse">
                 <AlertCircle size={14} />
@@ -118,6 +162,16 @@ export const CluePhase = () => {
             >
               <span>{isLastPlayer ? 'FINISH & START DISCUSSION' : 'SUBMIT CLUE & PASS'}</span>
               {isLastPlayer ? <ArrowRight size={18} /> : <Send size={18} />}
+            </button>
+
+            {/* Skip to Voting Action */}
+            <button
+              type="button"
+              onClick={startVoting}
+              className="w-full py-3 px-4 rounded-xl glass-card hover:bg-slate-800/80 text-rose-300 hover:text-white font-bold text-xs tracking-wider transition-all border border-rose-500/20 flex items-center justify-center gap-2 active:scale-95"
+            >
+              <Vote size={15} className="text-rose-400" />
+              <span>Spoke clues out loud? Skip straight to Voting</span>
             </button>
           </form>
         </motion.div>
@@ -170,7 +224,7 @@ export const CluePhase = () => {
 
       {/* Helpful tip */}
       <div className="mt-4 text-center text-xs text-slate-500">
-        💡 Pass the device to the player whose name is on the card.
+        💡 Pass the device to the player whose name is on the card, or tap "Go to Voting" anytime!
       </div>
     </div>
   );
