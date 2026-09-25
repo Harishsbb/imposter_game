@@ -39,10 +39,10 @@ const initialSettings: GameSettings = {
 };
 
 const initialPlayers: Player[] = [
-  { id: 'p1', name: 'Karthikeyan', color: PLAYER_COLORS[0], avatar: PLAYER_AVATARS[0] },
-  { id: 'p2', name: 'Bala surya', color: PLAYER_COLORS[1], avatar: PLAYER_AVATARS[1] },
-  { id: 'p3', name: 'Gnanesh', color: PLAYER_COLORS[2], avatar: PLAYER_AVATARS[2] },
-  { id: 'p4', name: 'sbb', color: PLAYER_COLORS[3], avatar: PLAYER_AVATARS[3] },
+  { id: 'p1', name: 'HARISH', color: PLAYER_COLORS[0], avatar: PLAYER_AVATARS[0] },
+  { id: 'p2', name: 'VIKRAM', color: PLAYER_COLORS[1], avatar: PLAYER_AVATARS[1] },
+  { id: 'p3', name: 'NANDHA', color: PLAYER_COLORS[2], avatar: PLAYER_AVATARS[2] },
+  { id: 'p4', name: 'BALA SURYA', color: PLAYER_COLORS[3], avatar: PLAYER_AVATARS[3] },
 ];
 
 export const useGameStore = create<GameState & GameStoreActions>((set, get) => ({

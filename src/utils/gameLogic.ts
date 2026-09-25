@@ -21,8 +21,8 @@ export const PLAYER_AVATARS = [
 ];
 
 export const SUGGESTED_NAMES = [
-  'pt balaji', 'Karthikeyan', 'Bala Surya', 'Gnanesh', 'Sbb', 'Rohan',
-  'Ananya', 'Vikram', 'Meera', 'Dev', 'Pooja', 'Sanjay'
+  'HARISH', 'VIKRAM', 'NANDHA', 'BALA SURYA', 'pt balaji', 'Karthikeyan',
+  'Gnanesh', 'Sbb', 'Rohan', 'Ananya', 'Meera', 'Dev'
 ];
 
 /**
