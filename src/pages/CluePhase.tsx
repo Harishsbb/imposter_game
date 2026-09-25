@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, MessageSquare, AlertCircle, Lock, ArrowRight, Vote, Sparkles } from 'lucide-react';
+import { Send, MessageSquare, AlertCircle, Lock, ArrowRight, Vote, Sparkles, Dices } from 'lucide-react';
 
 export const CluePhase = () => {
   const {
@@ -14,6 +14,7 @@ export const CluePhase = () => {
     startVoting,
     activeWord,
     impostorId,
+    settings,
   } = useGameStore();
 
   const [clueInput, setClueInput] = useState('');
@@ -59,9 +60,17 @@ export const CluePhase = () => {
       {/* Top Header */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 flex items-center gap-1.5">
-            <MessageSquare size={13} /> Clue Phase
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 flex items-center gap-1.5">
+              <MessageSquare size={13} /> Clue Phase
+            </span>
+            {settings.randomStartingPlayer && currentCluePlayerIndex === 0 && (
+              <span className="text-[10px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                <Dices size={12} className="text-amber-400" />
+                <span>Starts Round</span>
+              </span>
+            )}
+          </div>
 
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-slate-400">
@@ -105,8 +114,14 @@ export const CluePhase = () => {
               size="md"
             />
             <div className="text-left">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-300 block">
-                It's your turn
+              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1">
+                {currentCluePlayerIndex === 0 && settings.randomStartingPlayer ? (
+                  <span className="text-amber-400 font-extrabold flex items-center gap-1">
+                    <Dices size={12} /> Randomly Chosen to Start!
+                  </span>
+                ) : (
+                  <span>It's your turn</span>
+                )}
               </span>
               <h3 className="text-xl font-black text-white">{currentPlayer.name}</h3>
             </div>

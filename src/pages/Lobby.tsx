@@ -4,7 +4,7 @@ import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { SUGGESTED_NAMES } from '../utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff } from 'lucide-react';
+import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff, Dices } from 'lucide-react';
 
 export const Lobby = () => {
   const {
@@ -17,6 +17,8 @@ export const Lobby = () => {
     setPhase,
     settings,
     toggleImpostorHint,
+    toggleRandomStartingPlayer,
+    shuffleCurrentPlayers,
   } = useGameStore();
   const [newPlayerName, setNewPlayerName] = useState('');
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
@@ -100,9 +102,20 @@ export const Lobby = () => {
             <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
             <h3 className="text-base font-black text-white">Players</h3>
           </div>
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-800 text-purple-300 border border-white/5">
-            {players.length} / 12 Joined
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={shuffleCurrentPlayers}
+              className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 transition-all active:scale-95"
+              title="Shuffle players order"
+            >
+              <Shuffle size={13} />
+              <span>Shuffle</span>
+            </button>
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-800 text-purple-300 border border-white/5">
+              {players.length} / 12 Joined
+            </span>
+          </div>
         </div>
 
         {/* Players List */}
@@ -234,7 +247,7 @@ export const Lobby = () => {
       </div>
 
       {/* Impostor Hint Enable/Hide Option Card */}
-      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-5 flex items-center justify-between shadow-lg">
+      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
           <div
             className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-lg border transition-all ${
@@ -283,6 +296,60 @@ export const Lobby = () => {
             }`}
           >
             {settings.showImpostorHint ? '✓' : '✕'}
+          </span>
+        </button>
+      </div>
+
+      {/* Random Starting Player Option Card */}
+      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-5 flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-lg border transition-all ${
+              settings.randomStartingPlayer
+                ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                : 'bg-slate-800 text-slate-400 border-white/10'
+            }`}
+          >
+            <Dices size={22} />
+          </div>
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <h4 className="text-sm font-extrabold text-white">Random Starting Player</h4>
+              <span
+                className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                  settings.randomStartingPlayer
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                    : 'bg-slate-800 text-slate-400 border border-white/10'
+                }`}
+              >
+                {settings.randomStartingPlayer ? 'Random 🎲' : 'Fixed Order'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-0.5 max-w-[240px] sm:max-w-xs">
+              {settings.randomStartingPlayer
+                ? 'Round begins with a randomly chosen player'
+                : 'Round begins strictly in player order (Player 1 first)'}
+            </p>
+          </div>
+        </div>
+
+        {/* Toggle Switch */}
+        <button
+          type="button"
+          role="switch"
+          aria-checked={settings.randomStartingPlayer}
+          onClick={toggleRandomStartingPlayer}
+          aria-label="Toggle Random Starting Player"
+          className={`relative inline-flex h-8 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+            settings.randomStartingPlayer ? 'bg-purple-600 shadow-lg shadow-purple-600/30' : 'bg-slate-700'
+          }`}
+        >
+          <span
+            className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out flex items-center justify-center text-xs font-black ${
+              settings.randomStartingPlayer ? 'translate-x-6 text-purple-600' : 'translate-x-0 text-slate-500'
+            }`}
+          >
+            {settings.randomStartingPlayer ? '✓' : '✕'}
           </span>
         </button>
       </div>

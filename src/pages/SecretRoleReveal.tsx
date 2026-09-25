@@ -4,7 +4,7 @@ import { PlayerAvatar } from '../components/PlayerAvatar';
 import { WORD_EMOJIS, CATEGORY_EMOJIS } from '../data/words';
 import { playSecretRevealSound } from '../utils/soundEffects';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, ShieldCheck, Lock, ChevronRight, User } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, Lock, ChevronRight, User, Dices } from 'lucide-react';
 
 export const SecretRoleReveal = () => {
   const {
@@ -41,9 +41,17 @@ export const SecretRoleReveal = () => {
     <div className="w-full max-w-lg mx-auto px-4 py-6 flex-1 flex flex-col justify-between relative z-10">
       {/* Progress header */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
-          Secret Role Reveal
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
+            Secret Role Reveal
+          </span>
+          {settings.randomStartingPlayer && currentRoleRevealIndex === 0 && (
+            <span className="text-[10px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+              <Dices size={12} className="text-amber-400" />
+              <span>Random Starter</span>
+            </span>
+          )}
+        </div>
         <span className="text-xs font-bold text-slate-400">
           Player {currentRoleRevealIndex + 1} of {players.length}
         </span>
@@ -67,7 +75,13 @@ export const SecretRoleReveal = () => {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
-                Pass Device To
+                {currentRoleRevealIndex === 0 && settings.randomStartingPlayer ? (
+                  <span className="text-amber-400 font-extrabold flex items-center justify-center gap-1.5">
+                    <Dices size={14} /> Game Starts With
+                  </span>
+                ) : (
+                  <span>Pass Device To</span>
+                )}
               </span>
 
               <div className="flex items-center gap-3 mb-4">

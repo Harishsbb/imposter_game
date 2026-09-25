@@ -1,7 +1,7 @@
 import { useGameStore } from '../store/gameStore';
 import { CATEGORIES, CATEGORY_EMOJIS } from '../data/words';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Users, Check, Sparkles, Timer, Lightbulb, EyeOff, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Users, Check, Sparkles, Timer, Lightbulb, EyeOff, ShieldCheck, Dices } from 'lucide-react';
 
 export const CreateGame = () => {
   const { settings, updateSettings, setPhase } = useGameStore();
@@ -220,6 +220,59 @@ export const CreateGame = () => {
               }`}
             >
               {settings.showImpostorHint ? '✓' : '✕'}
+            </span>
+          </button>
+        </div>
+
+        {/* Random Starting Player Setting Card */}
+        <div className="glass-card p-3.5 rounded-2xl border border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-base border transition-all ${
+                settings.randomStartingPlayer
+                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                  : 'bg-slate-800 text-slate-400 border-white/10'
+              }`}
+            >
+              <Dices size={18} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-xs font-bold text-white">Random Starting Player</h4>
+                <span
+                  className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${
+                    settings.randomStartingPlayer
+                      ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                      : 'bg-slate-800 text-slate-400 border border-white/10'
+                  }`}
+                >
+                  {settings.randomStartingPlayer ? 'Random 🎲' : 'Fixed Order'}
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 mt-0.5">
+                {settings.randomStartingPlayer
+                  ? 'Game and clues start with a randomly chosen player'
+                  : 'Game starts in lobby player order (Player 1 first)'}
+              </p>
+            </div>
+          </div>
+
+          {/* Pixel-Perfect Switch */}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={settings.randomStartingPlayer}
+            onClick={() => updateSettings({ randomStartingPlayer: !settings.randomStartingPlayer })}
+            className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              settings.randomStartingPlayer ? 'bg-purple-600 shadow-md shadow-purple-600/30' : 'bg-slate-700'
+            }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out flex items-center justify-center text-[10px] font-black ${
+                settings.randomStartingPlayer ? 'translate-x-5 text-purple-600' : 'translate-x-0 text-slate-500'
+              }`}
+            >
+              {settings.randomStartingPlayer ? '✓' : '✕'}
             </span>
           </button>
         </div>

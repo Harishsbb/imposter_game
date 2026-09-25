@@ -21,7 +21,7 @@ export const PLAYER_AVATARS = [
 ];
 
 export const SUGGESTED_NAMES = [
-  'Karthi', 'Arun', 'Priya', 'Rahul', 'Sneha', 'Rohan',
+  'pt balaji', 'Karthikeyan', 'Bala Surya', 'Gnanesh', 'Sbb', 'Rohan',
   'Ananya', 'Vikram', 'Meera', 'Dev', 'Pooja', 'Sanjay'
 ];
 
@@ -39,6 +39,18 @@ export function pickRandomWord(selectedCategories: string[]): WordEntry {
   }
   const randomIndex = Math.floor(Math.random() * candidates.length);
   return candidates[randomIndex];
+}
+
+/**
+ * Shuffles an array of players randomly using Fisher-Yates algorithm.
+ */
+export function shufflePlayers(players: Player[]): Player[] {
+  const shuffled = [...players];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 /**

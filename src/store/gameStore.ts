@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { GamePhase, GameSettings, GameState, Player } from '../types/game';
-import { assignRoles, checkImpostorGuess, pickRandomWord, PLAYER_AVATARS, PLAYER_COLORS, SUGGESTED_NAMES, tallyVotes } from '../utils/gameLogic';
+import { assignRoles, checkImpostorGuess, pickRandomWord, PLAYER_AVATARS, PLAYER_COLORS, shufflePlayers, SUGGESTED_NAMES, tallyVotes } from '../utils/gameLogic';
 import { playClickSound, playSecretRevealSound, playVictorySound, playVoteSound } from '../utils/soundEffects';
 
 interface GameStoreActions {
@@ -12,7 +12,9 @@ interface GameStoreActions {
   populateDefaultPlayers: (count?: number) => void;
   toggleSound: () => void;
   toggleImpostorHint: () => void;
-  
+  toggleRandomStartingPlayer: () => void;
+  shuffleCurrentPlayers: () => void;
+
   // Game lifecycle
   startNewGame: () => void;
   nextRoleReveal: () => void;
@@ -33,13 +35,14 @@ const initialSettings: GameSettings = {
   gameMode: 'classic',
   discussionTimerSeconds: 60,
   showImpostorHint: true,
+  randomStartingPlayer: true,
 };
 
 const initialPlayers: Player[] = [
-  { id: 'p1', name: 'Karthi', color: PLAYER_COLORS[0], avatar: PLAYER_AVATARS[0] },
-  { id: 'p2', name: 'Arun', color: PLAYER_COLORS[1], avatar: PLAYER_AVATARS[1] },
-  { id: 'p3', name: 'Priya', color: PLAYER_COLORS[2], avatar: PLAYER_AVATARS[2] },
-  { id: 'p4', name: 'Rahul', color: PLAYER_COLORS[3], avatar: PLAYER_AVATARS[3] },
+  { id: 'p1', name: 'Karthikeyan', color: PLAYER_COLORS[0], avatar: PLAYER_AVATARS[0] },
+  { id: 'p2', name: 'Bala surya', color: PLAYER_COLORS[1], avatar: PLAYER_AVATARS[1] },
+  { id: 'p3', name: 'Gnanesh', color: PLAYER_COLORS[2], avatar: PLAYER_AVATARS[2] },
+  { id: 'p4', name: 'sbb', color: PLAYER_COLORS[3], avatar: PLAYER_AVATARS[3] },
 ];
 
 export const useGameStore = create<GameState & GameStoreActions>((set, get) => ({
@@ -160,13 +163,33 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
     });
   },
 
+  toggleRandomStartingPlayer: () => {
+    const { settings, soundEnabled } = get();
+    playClickSound(soundEnabled);
+    set({
+      settings: {
+        ...settings,
+        randomStartingPlayer: !settings.randomStartingPlayer,
+      }
+    });
+  },
+
+  shuffleCurrentPlayers: () => {
+    const { players, soundEnabled } = get();
+    playClickSound(soundEnabled);
+    set({ players: shufflePlayers(players) });
+  },
+
   startNewGame: () => {
     const { settings, players, soundEnabled } = get();
     if (players.length < 3) return;
 
+    // If randomStartingPlayer is enabled, randomize player order so the game starts with a random person
+    const playersToUse = settings.randomStartingPlayer ? shufflePlayers(players) : [...players];
+
     // Pick random word and assign roles
     const activeWord = pickRandomWord(settings.selectedCategories);
-    const { players: assignedPlayers, impostorId } = assignRoles(players);
+    const { players: assignedPlayers, impostorId } = assignRoles(playersToUse);
 
     playClickSound(soundEnabled);
 
@@ -269,7 +292,7 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
   resolveVotes: () => {
     const { votes, players, soundEnabled } = get();
     const result = tallyVotes(votes, players);
-    
+
     // In case of a tie, if tiedIds exist, randomly eliminate one of the top voted or pick first
     let eliminatedId = result.eliminatedId;
     if (result.isTie && result.tiedIds.length > 0) {

@@ -51,6 +51,7 @@ export interface GameSettings {
   gameMode: 'classic';
   discussionTimerSeconds: number;
   showImpostorHint: boolean;
+  randomStartingPlayer: boolean;
 }
 
 export interface GameState {
