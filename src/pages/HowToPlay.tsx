@@ -1,6 +1,6 @@
 import { useGameStore } from '../store/gameStore';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Users, ShieldAlert, KeyRound, MessageSquare, Vote, Trophy, HelpCircle } from 'lucide-react';
+import { ArrowLeft, KeyRound, MessageSquare, Vote, Trophy, HelpCircle, ShieldAlert } from 'lucide-react';
 
 interface HowToPlayProps {
   onBack?: () => void;
@@ -27,27 +27,21 @@ export const HowToPlay = ({ onBack, isModal = false }: HowToPlayProps) => {
     },
     {
       step: '2',
-      title: 'Give One Clue',
+      title: 'Discuss & Give Clues Aloud',
       icon: <MessageSquare size={22} className="text-cyan-400" />,
-      desc: 'Each player in turn enters a 1-word or short clue related to the secret word. Be careful: make your clue subtle enough so the Impostor cannot easily guess the word, but clear enough so Citizens know you are innocent!',
+      desc: 'Speak aloud with friends in the room! Share subtle verbal clues and debate freely. Notice who hesitates or seems confused about the topic!',
     },
     {
       step: '3',
-      title: 'Discussion & Debate',
-      icon: <Users size={22} className="text-amber-400" />,
-      desc: 'Review all submitted clues together on screen. Notice who hesitated, whose clue was too vague, or who repeated someone else\'s idea!',
+      title: 'Vote Out the Suspect',
+      icon: <Vote size={22} className="text-rose-400" />,
+      desc: 'Immediately pass the device around to cast confidential secret votes for the player you suspect is the Impostor!',
     },
     {
       step: '4',
-      title: 'Vote Out the Suspect',
-      icon: <Vote size={22} className="text-rose-400" />,
-      desc: 'Each player casts a secret vote for the person they suspect is the Impostor. The player with the most votes is eliminated!',
-    },
-    {
-      step: '5',
-      title: 'Impostor\'s Final Guess',
+      title: "Impostor's Final Guess",
       icon: <Trophy size={22} className="text-yellow-400" />,
-      desc: 'If Citizens eliminate an innocent player, the Impostor wins immediately! If the Impostor is caught, they get ONE LAST CHANCE to guess the secret word. If they guess correctly, the Impostor wins!',
+      desc: 'If Citizens eliminate an innocent player, the Impostor wins immediately! If the Impostor is caught, they get ONE LAST CHANCE to guess the secret word to steal victory!',
     },
   ];
 

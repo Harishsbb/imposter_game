@@ -4,7 +4,7 @@ import { PlayerAvatar } from '../components/PlayerAvatar';
 import { WORD_EMOJIS, CATEGORY_EMOJIS } from '../data/words';
 import { playSecretRevealSound } from '../utils/soundEffects';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, ShieldCheck, Lock, ChevronRight, User, Dices } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, Lock, ChevronRight, User, Dices, Vote } from 'lucide-react';
 
 export const SecretRoleReveal = () => {
   const {
@@ -12,6 +12,7 @@ export const SecretRoleReveal = () => {
     currentRoleRevealIndex,
     activeWord,
     impostorId,
+    impostorIds,
     nextRoleReveal,
     soundEnabled,
     settings,
@@ -22,7 +23,7 @@ export const SecretRoleReveal = () => {
   const currentPlayer = players[currentRoleRevealIndex];
   if (!currentPlayer || !activeWord) return null;
 
-  const isImpostor = currentPlayer.id === impostorId;
+  const isImpostor = currentPlayer.role === 'impostor' || currentPlayer.id === impostorId || (impostorIds && impostorIds.includes(currentPlayer.id));
   const isLastPlayer = currentRoleRevealIndex === players.length - 1;
 
   const handleReveal = () => {
@@ -45,10 +46,10 @@ export const SecretRoleReveal = () => {
           <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
             Secret Role Reveal
           </span>
-          {settings.randomStartingPlayer && currentRoleRevealIndex === 0 && (
+          {currentRoleRevealIndex === 0 && (
             <span className="text-[10px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
               <Dices size={12} className="text-amber-400" />
-              <span>Random Starter</span>
+              <span>Starts Round (Citizen)</span>
             </span>
           )}
         </div>
@@ -75,9 +76,9 @@ export const SecretRoleReveal = () => {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
-                {currentRoleRevealIndex === 0 && settings.randomStartingPlayer ? (
+                {currentRoleRevealIndex === 0 ? (
                   <span className="text-amber-400 font-extrabold flex items-center justify-center gap-1.5">
-                    <Dices size={14} /> Game Starts With
+                    <Dices size={14} /> Round Starts With (Citizen)
                   </span>
                 ) : (
                   <span>Pass Device To</span>
@@ -162,7 +163,7 @@ export const SecretRoleReveal = () => {
                   </div>
 
                   <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
-                    Blend in! Listen carefully to other players' clues, enter a plausible clue of your own, and guess the word if exposed!
+                    Blend in! Listen carefully to other players, pretend you know the word, and guess it if exposed!
                   </p>
                 </div>
               ) : (
@@ -184,8 +185,15 @@ export const SecretRoleReveal = () => {
                     Category: {activeWord.category}
                   </span>
 
+                  {currentRoleRevealIndex === 0 && (
+                    <span className="text-[11px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                      <Dices size={13} className="text-amber-400" />
+                      <span>Round Starter: You speak the first clue aloud!</span>
+                    </span>
+                  )}
+
                   <p className="text-xs text-slate-300 max-w-xs mt-2 leading-relaxed">
-                    Give a subtle clue during the clue phase to show other citizens you know the word without revealing it to the impostor!
+                    Share subtle clues aloud with friends in the room to prove you are innocent without giving away the word!
                   </p>
                 </div>
               )}
@@ -197,12 +205,14 @@ export const SecretRoleReveal = () => {
                   className={`w-full py-4 px-6 rounded-2xl font-extrabold text-base tracking-wider text-white shadow-xl transition-all border border-white/20 flex items-center justify-center gap-2 active:scale-95 ${
                     isImpostor
                       ? 'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 shadow-rose-600/30'
+                      : isLastPlayer
+                      ? 'bg-gradient-to-r from-rose-600 via-purple-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 shadow-rose-600/30'
                       : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-purple-600/30'
                   }`}
                 >
-                  <EyeOff size={18} />
+                  {isLastPlayer ? <Vote size={18} /> : <EyeOff size={18} />}
                   <span>
-                    {isLastPlayer ? 'START CLUE PHASE' : "I'VE GOT IT! HIDE & PASS"}
+                    {isLastPlayer ? 'PROCEED TO VOTING' : "I'VE GOT IT! HIDE & PASS"}
                   </span>
                   <ChevronRight size={18} />
                 </button>

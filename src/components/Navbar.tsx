@@ -37,9 +37,7 @@ export const Navbar = ({ onOpenRules }: NavbarProps) => {
       case 'role-reveal':
         return 'Secret Role Reveal';
       case 'clue-phase':
-        return 'Clue Round';
       case 'discussion':
-        return 'Discussion Phase';
       case 'voting':
         return 'Voting Time';
       case 'reveal-impostor':

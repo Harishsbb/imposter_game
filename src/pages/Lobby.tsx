@@ -2,9 +2,9 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
-import { SUGGESTED_NAMES } from '../utils/gameLogic';
+import { SUGGESTED_NAMES, getMaxImpostors } from '../utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff, Dices } from 'lucide-react';
+import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff, Dices, UserX } from 'lucide-react';
 
 export const Lobby = () => {
   const {
@@ -18,6 +18,7 @@ export const Lobby = () => {
     settings,
     toggleImpostorHint,
     toggleRandomStartingPlayer,
+    setImpostorCount,
     shuffleCurrentPlayers,
   } = useGameStore();
   const [newPlayerName, setNewPlayerName] = useState('');
@@ -53,19 +54,47 @@ export const Lobby = () => {
   };
 
   const startEdit = (id: string, currentName: string) => {
+    // If another player was being edited, ensure it is saved
+    if (editingPlayerId && editingPlayerId !== id) {
+      const idx = players.findIndex((p) => p.id === editingPlayerId);
+      const trimmed = editingName.trim();
+      const finalName = trimmed || `Player ${idx >= 0 ? idx + 1 : 1}`;
+      updatePlayerName(editingPlayerId, finalName);
+    }
     setEditingPlayerId(id);
     setEditingName(currentName);
   };
 
-  const saveEdit = (id: string) => {
-    if (editingName.trim()) {
-      updatePlayerName(id, editingName.trim());
-    }
+  const handleEditChange = (id: string, val: string) => {
+    setEditingName(val);
+    // Auto-save immediately to store & localStorage on every keystroke
+    updatePlayerName(id, val);
+  };
+
+  const finishEdit = (id: string, fallbackIdx: number) => {
+    const trimmed = editingName.trim();
+    const finalName = trimmed || `Player ${fallbackIdx + 1}`;
+    updatePlayerName(id, finalName);
     setEditingPlayerId(null);
     setEditingName('');
   };
 
+  const handleStartGame = () => {
+    if (editingPlayerId) {
+      const idx = players.findIndex((p) => p.id === editingPlayerId);
+      const trimmed = editingName.trim();
+      const finalName = trimmed || `Player ${idx >= 0 ? idx + 1 : 1}`;
+      updatePlayerName(editingPlayerId, finalName);
+      setEditingPlayerId(null);
+      setEditingName('');
+    }
+    startNewGame();
+  };
+
   const canStart = players.length >= 3 && players.length <= 12;
+
+  const maxAllowedImpostors = getMaxImpostors(players.length);
+  const currentImpostors = Math.min(settings.impostorCount || 1, maxAllowedImpostors);
 
   // Unused suggestions
   const quickSuggestions = SUGGESTED_NAMES.filter(
@@ -91,7 +120,7 @@ export const Lobby = () => {
       <div className="text-center mb-6">
         <h2 className="text-3xl font-black text-white tracking-wide">ROOM</h2>
         <p className="text-xs text-slate-400 mt-1">
-          Add players who will share this device to play
+          Add players who will share this device to play &bull; Names auto-save automatically
         </p>
       </div>
 
@@ -127,7 +156,11 @@ export const Lobby = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="flex items-center justify-between p-3 rounded-2xl bg-slate-900/60 border border-white/5 hover:border-purple-500/30 transition-all"
+                className={`flex items-center justify-between p-3 rounded-2xl bg-slate-900/60 border transition-all ${
+                  editingPlayerId === player.id
+                    ? 'border-purple-500/60 shadow-lg shadow-purple-500/10'
+                    : 'border-white/5 hover:border-purple-500/30'
+                }`}
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <span className="text-xs font-bold text-slate-500 w-4 text-center">
@@ -136,28 +169,50 @@ export const Lobby = () => {
                   <PlayerAvatar name={player.name} color={player.color} avatar={player.avatar} size="sm" />
                   
                   {editingPlayerId === player.id ? (
-                    <div className="flex items-center gap-2 flex-1 mr-2">
-                      <input
-                        type="text"
-                        value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && saveEdit(player.id)}
-                        autoFocus
-                        className="glass-input px-2.5 py-1 text-sm rounded-lg flex-1 font-semibold text-white"
-                        maxLength={18}
-                      />
+                    <div className="flex items-center gap-2 flex-1 mr-2 min-w-0">
+                      <div className="relative flex-1 min-w-0">
+                        <input
+                          type="text"
+                          value={editingName}
+                          onChange={(e) => handleEditChange(player.id, e.target.value)}
+                          onBlur={() => finishEdit(player.id, idx)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              finishEdit(player.id, idx);
+                            } else if (e.key === 'Escape') {
+                              finishEdit(player.id, idx);
+                            }
+                          }}
+                          autoFocus
+                          placeholder={`Player ${idx + 1}`}
+                          className="w-full glass-input px-3 py-1.5 text-sm rounded-xl font-bold text-white pr-24 border-purple-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40 transition-all"
+                          maxLength={18}
+                        />
+                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-emerald-400 flex items-center gap-0.5 pointer-events-none bg-emerald-500/15 px-1.5 py-0.5 rounded-md border border-emerald-500/30 whitespace-nowrap">
+                          <Check size={11} className="stroke-[3]" /> Auto-saved
+                        </span>
+                      </div>
                       <button
-                        onClick={() => saveEdit(player.id)}
-                        className="p-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-500"
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => finishEdit(player.id, idx)}
+                        className="p-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm shadow-emerald-600/30 transition-all active:scale-95 flex-shrink-0"
+                        title="Done (Auto-saved)"
                       >
-                        <Check size={14} />
+                        <Check size={14} className="stroke-[2.5]" />
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <span className="text-sm font-bold text-slate-100 truncate">
+                    <div
+                      onClick={() => startEdit(player.id, player.name)}
+                      className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer group py-1"
+                      title="Click to edit name (Auto-saves as you type)"
+                    >
+                      <span className="text-sm font-bold text-slate-100 truncate group-hover:text-purple-300 transition-colors">
                         {player.name}
                       </span>
+                      <Edit2 size={12} className="text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-purple-300 transition-all" />
                     </div>
                   )}
                 </div>
@@ -246,6 +301,59 @@ export const Lobby = () => {
         </button>
       </div>
 
+      {/* Number of Impostors Selection Card */}
+      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-4 flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-lg border border-rose-500/30 bg-rose-500/20 text-rose-300">
+            <UserX size={22} />
+          </div>
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <h4 className="text-sm font-extrabold text-white">Number of Impostors</h4>
+              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                {currentImpostors} {currentImpostors === 1 ? 'Impostor 🕵️' : 'Impostors 🕵️🕵️'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-0.5 max-w-[240px] sm:max-w-xs">
+              {maxAllowedImpostors === 1
+                ? 'Only 1 impostor allowed for 3–4 players'
+                : `Choose how many hidden impostors to spawn (Max ${maxAllowedImpostors})`}
+            </p>
+          </div>
+        </div>
+
+        {/* Count Selector Pills */}
+        <div className="flex items-center gap-1.5 bg-slate-950/50 p-1.5 rounded-2xl border border-white/10">
+          {[1, 2, 3].map((count) => {
+            const isDisabled = count > maxAllowedImpostors;
+            const isSelected = currentImpostors === count;
+
+            return (
+              <button
+                key={count}
+                type="button"
+                disabled={isDisabled}
+                onClick={() => setImpostorCount(count)}
+                className={`w-9 h-9 rounded-xl text-xs font-black transition-all flex items-center justify-center ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-md shadow-rose-500/40 scale-105'
+                    : isDisabled
+                    ? 'opacity-25 cursor-not-allowed text-slate-500'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800 active:scale-95'
+                }`}
+                title={
+                  isDisabled
+                    ? `Requires at least ${count === 2 ? 5 : 7} players`
+                    : `Spawn ${count} Impostor${count > 1 ? 's' : ''}`
+                }
+              >
+                {count}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Impostor Hint Enable/Hide Option Card */}
       <div className="glass-card p-4 rounded-3xl border border-white/10 mb-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
@@ -327,8 +435,8 @@ export const Lobby = () => {
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5 max-w-[240px] sm:max-w-xs">
               {settings.randomStartingPlayer
-                ? 'Round begins with a randomly chosen player'
-                : 'Round begins strictly in player order (Player 1 first)'}
+                ? 'Round begins with a random Citizen (Impostor never starts first!)'
+                : 'Round begins with Player 1 (Impostor never starts first!)'}
             </p>
           </div>
         </div>
@@ -357,7 +465,7 @@ export const Lobby = () => {
       {/* Start Game Action Button */}
       <motion.div whileHover={{ scale: canStart ? 1.01 : 1 }} whileTap={{ scale: canStart ? 0.99 : 1 }}>
         <button
-          onClick={startNewGame}
+          onClick={handleStartGame}
           disabled={!canStart}
           className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black text-lg tracking-wider shadow-xl shadow-emerald-500/25 transition-all border border-white/20 flex items-center justify-center gap-3"
         >

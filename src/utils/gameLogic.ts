@@ -54,23 +54,49 @@ export function shufflePlayers(players: Player[]): Player[] {
 }
 
 /**
- * Assigns one random player as the Impostor and all others as Citizens.
+ * Calculates max allowable impostors based on player count.
+ * 3-4 players: max 1
+ * 5-6 players: max 2
+ * 7+ players: max 3
  */
-export function assignRoles(players: Player[]): { players: Player[]; impostorId: string } {
+export function getMaxImpostors(playerCount: number): number {
+  if (playerCount < 5) return 1;
+  if (playerCount < 7) return 2;
+  return 3;
+}
+
+/**
+ * Assigns random players as Impostors (based on impostorCount) and all others as Citizens.
+ */
+export function assignRoles(
+  players: Player[],
+  impostorCount: number = 1
+): { players: Player[]; impostorIds: string[]; impostorId: string } {
   if (players.length < 3) {
     throw new Error('At least 3 players required to assign roles');
   }
 
-  const impostorIndex = Math.floor(Math.random() * players.length);
-  const impostorId = players[impostorIndex].id;
+  const maxAllowed = getMaxImpostors(players.length);
+  const countToAssign = Math.min(Math.max(1, impostorCount), maxAllowed);
+
+  // Pick random distinct indices for impostors from index 1 upwards.
+  // Index 0 is the starting player of the round and is GUARANTEED to be a Citizen.
+  const eligibleIndices = Array.from({ length: players.length - 1 }, (_, i) => i + 1);
+  for (let i = eligibleIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [eligibleIndices[i], eligibleIndices[j]] = [eligibleIndices[j], eligibleIndices[i]];
+  }
+
+  const chosenIndices = new Set(eligibleIndices.slice(0, countToAssign));
+  const impostorIds = players.filter((_, idx) => chosenIndices.has(idx)).map((p) => p.id);
 
   const updatedPlayers = players.map((p, idx) => ({
     ...p,
-    role: (idx === impostorIndex ? 'impostor' : 'citizen') as Role,
-    isEliminated: false
+    role: (chosenIndices.has(idx) ? 'impostor' : 'citizen') as Role,
+    isEliminated: false,
   }));
 
-  return { players: updatedPlayers, impostorId };
+  return { players: updatedPlayers, impostorIds, impostorId: impostorIds[0] };
 }
 
 /**

@@ -52,6 +52,7 @@ export interface GameSettings {
   discussionTimerSeconds: number;
   showImpostorHint: boolean;
   randomStartingPlayer: boolean;
+  impostorCount: number;
 }
 
 export interface GameState {
@@ -60,6 +61,7 @@ export interface GameState {
   players: Player[];
   activeWord: WordEntry | null;
   impostorId: string | null;
+  impostorIds: string[];
   currentRoleRevealIndex: number;
   clues: ClueEntry[];
   currentCluePlayerIndex: number;

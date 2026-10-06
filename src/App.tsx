@@ -8,8 +8,6 @@ import { HowToPlay } from './pages/HowToPlay';
 import { CreateGame } from './pages/CreateGame';
 import { Lobby } from './pages/Lobby';
 import { SecretRoleReveal } from './pages/SecretRoleReveal';
-import { CluePhase } from './pages/CluePhase';
-import { Discussion } from './pages/Discussion';
 import { Voting } from './pages/Voting';
 import { RevealImpostor } from './pages/RevealImpostor';
 import { FinalGuess } from './pages/FinalGuess';
@@ -33,9 +31,7 @@ export function App() {
       case 'role-reveal':
         return <SecretRoleReveal />;
       case 'clue-phase':
-        return <CluePhase />;
       case 'discussion':
-        return <Discussion />;
       case 'voting':
         return <Voting />;
       case 'reveal-impostor':

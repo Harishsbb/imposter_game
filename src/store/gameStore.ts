@@ -1,6 +1,7 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { GamePhase, GameSettings, GameState, Player } from '../types/game';
-import { assignRoles, checkImpostorGuess, pickRandomWord, PLAYER_AVATARS, PLAYER_COLORS, shufflePlayers, SUGGESTED_NAMES, tallyVotes } from '../utils/gameLogic';
+import { assignRoles, checkImpostorGuess, getMaxImpostors, pickRandomWord, PLAYER_AVATARS, PLAYER_COLORS, shufflePlayers, SUGGESTED_NAMES, tallyVotes } from '../utils/gameLogic';
 import { playClickSound, playSecretRevealSound, playVictorySound, playVoteSound } from '../utils/soundEffects';
 
 interface GameStoreActions {
@@ -13,6 +14,7 @@ interface GameStoreActions {
   toggleSound: () => void;
   toggleImpostorHint: () => void;
   toggleRandomStartingPlayer: () => void;
+  setImpostorCount: (count: number) => void;
   shuffleCurrentPlayers: () => void;
 
   // Game lifecycle
@@ -34,8 +36,9 @@ const initialSettings: GameSettings = {
   difficulty: 'easy',
   gameMode: 'classic',
   discussionTimerSeconds: 60,
-  showImpostorHint: true,
+  showImpostorHint: false, // Default is OFF
   randomStartingPlayer: true,
+  impostorCount: 1,
 };
 
 const initialPlayers: Player[] = [
@@ -45,12 +48,32 @@ const initialPlayers: Player[] = [
   { id: 'p4', name: 'BALA SURYA', color: PLAYER_COLORS[3], avatar: PLAYER_AVATARS[3] },
 ];
 
-export const useGameStore = create<GameState & GameStoreActions>((set, get) => ({
+const getMigratedPlayers = (): Player[] => {
+  try {
+    for (const key of ['impostor_party_save_data', 'impostor_party_save_data_v2', 'impostor-game-storage']) {
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed?.state?.players) && parsed.state.players.length >= 3) {
+          return parsed.state.players;
+        }
+      }
+    }
+  } catch {
+    // Ignore error
+  }
+  return initialPlayers;
+};
+
+export const useGameStore = create<GameState & GameStoreActions>()(
+  persist(
+    (set, get) => ({
   phase: 'home',
   settings: initialSettings,
-  players: initialPlayers,
+  players: getMigratedPlayers(),
   activeWord: null,
   impostorId: null,
+  impostorIds: [],
   currentRoleRevealIndex: 0,
   clues: [],
   currentCluePlayerIndex: 0,
@@ -91,6 +114,10 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
           players = players.slice(0, newSettings.playerCount);
         }
       }
+      const maxAllowed = getMaxImpostors(players.length);
+      if (updated.impostorCount > maxAllowed) {
+        updated.impostorCount = maxAllowed;
+      }
       return { settings: updated, players };
     });
   },
@@ -115,13 +142,19 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
   },
 
   removePlayer: (id) => {
-    const { players, soundEnabled } = get();
+    const { players, soundEnabled, settings } = get();
     if (players.length <= 3) return; // Minimum 3 players required
     playClickSound(soundEnabled);
     const updated = players.filter((p) => p.id !== id);
+    const maxAllowed = getMaxImpostors(updated.length);
+    const currentImpostorCount = settings.impostorCount || 1;
     set({
       players: updated,
-      settings: { ...get().settings, playerCount: updated.length }
+      settings: {
+        ...settings,
+        playerCount: updated.length,
+        impostorCount: Math.min(currentImpostorCount, maxAllowed),
+      },
     });
   },
 
@@ -142,9 +175,15 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
         avatar: PLAYER_AVATARS[i % PLAYER_AVATARS.length],
       });
     }
+    const maxAllowed = getMaxImpostors(clamped);
+    const currentImpostorCount = get().settings.impostorCount || 1;
     set({
       players: newPlayers,
-      settings: { ...get().settings, playerCount: clamped }
+      settings: {
+        ...get().settings,
+        playerCount: clamped,
+        impostorCount: Math.min(currentImpostorCount, maxAllowed),
+      }
     });
   },
 
@@ -174,6 +213,16 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
     });
   },
 
+  setImpostorCount: (count) => {
+    const { players, soundEnabled } = get();
+    playClickSound(soundEnabled);
+    const maxAllowed = getMaxImpostors(players.length);
+    const clamped = Math.min(Math.max(1, count), maxAllowed);
+    set((state) => ({
+      settings: { ...state.settings, impostorCount: clamped },
+    }));
+  },
+
   shuffleCurrentPlayers: () => {
     const { players, soundEnabled } = get();
     playClickSound(soundEnabled);
@@ -184,12 +233,20 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
     const { settings, players, soundEnabled } = get();
     if (players.length < 3) return;
 
+    // Ensure all players have trimmed non-empty names
+    const cleaned = players.map((p, idx) => ({
+      ...p,
+      name: p.name.trim() || `Player ${idx + 1}`,
+    }));
+
     // If randomStartingPlayer is enabled, randomize player order so the game starts with a random person
-    const playersToUse = settings.randomStartingPlayer ? shufflePlayers(players) : [...players];
+    const playersToUse = settings.randomStartingPlayer ? shufflePlayers(cleaned) : cleaned;
 
     // Pick random word and assign roles
     const activeWord = pickRandomWord(settings.selectedCategories);
-    const { players: assignedPlayers, impostorId } = assignRoles(playersToUse);
+    const maxAllowed = getMaxImpostors(playersToUse.length);
+    const chosenCount = Math.min(Math.max(1, settings.impostorCount || 1), maxAllowed);
+    const { players: assignedPlayers, impostorIds, impostorId } = assignRoles(playersToUse, chosenCount);
 
     playClickSound(soundEnabled);
 
@@ -197,6 +254,7 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
       players: assignedPlayers,
       activeWord,
       impostorId,
+      impostorIds,
       currentRoleRevealIndex: 0,
       clues: [],
       currentCluePlayerIndex: 0,
@@ -217,10 +275,11 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
     if (currentRoleRevealIndex + 1 < players.length) {
       set({ currentRoleRevealIndex: currentRoleRevealIndex + 1 });
     } else {
-      // Everyone has seen their secret role, proceed to clue phase
+      // Everyone has seen their secret role -> Move directly to voting!
       set({
-        phase: 'clue-phase',
-        currentCluePlayerIndex: 0,
+        phase: 'voting',
+        votes: {},
+        currentVoterIndex: 0,
       });
     }
   },
@@ -307,34 +366,38 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
   },
 
   proceedFromReveal: () => {
-    const { eliminatedPlayerId, impostorId, soundEnabled, players } = get();
-    const isImpostorEliminated = eliminatedPlayerId === impostorId;
+    const { eliminatedPlayerId, impostorId, impostorIds, soundEnabled, players } = get();
+    const eliminatedPlayer = players.find(p => p.id === eliminatedPlayerId);
+    const isImpostorEliminated = eliminatedPlayer?.role === 'impostor' || (impostorIds && impostorIds.includes(eliminatedPlayerId || '')) || eliminatedPlayerId === impostorId;
     playSecretRevealSound(isImpostorEliminated, soundEnabled);
 
     if (isImpostorEliminated) {
       // Impostor caught! They get ONE LAST CHANCE to guess the secret word!
       set({
         phase: 'final-guess',
+        impostorId: eliminatedPlayerId,
       });
     } else {
-      // An innocent citizen was eliminated! Impostor wins!
-      const eliminatedPlayer = players.find(p => p.id === eliminatedPlayerId);
-      const impostor = players.find(p => p.id === impostorId);
+      // An innocent citizen was eliminated! Impostor(s) win!
+      const allImpostors = players.filter(p => p.role === 'impostor' || (impostorIds && impostorIds.includes(p.id)) || p.id === impostorId);
+      const impostorNames = allImpostors.map(p => p.name).join(' & ') || 'The Impostor';
       playVictorySound(soundEnabled);
       set({
         phase: 'winner',
         winner: 'impostor',
-        winnerReason: `Citizens eliminated innocent player ${eliminatedPlayer?.name || 'a citizen'}! The Impostor (${impostor?.name}) escaped unnoticed!`,
+        winnerReason: `Citizens eliminated innocent player ${eliminatedPlayer?.name || 'a citizen'}! The Impostor (${impostorNames}) escaped unnoticed!`,
       });
     }
   },
 
   submitFinalGuess: (guess) => {
-    const { activeWord, impostorId, players, soundEnabled } = get();
+    const { activeWord, impostorId, impostorIds, players, soundEnabled } = get();
     if (!activeWord) return;
 
     const isCorrect = checkImpostorGuess(guess, activeWord.word);
-    const impostor = players.find(p => p.id === impostorId);
+    const caughtImpostor = players.find(p => p.id === impostorId) || players.find(p => p.role === 'impostor');
+    const allImpostors = players.filter(p => p.role === 'impostor' || (impostorIds && impostorIds.includes(p.id)));
+    const impostorNames = allImpostors.map(p => p.name).join(' & ') || caughtImpostor?.name || 'The Impostor';
 
     playVictorySound(soundEnabled);
 
@@ -344,7 +407,7 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
         impostorGuess: guess,
         impostorGuessCorrect: true,
         winner: 'impostor',
-        winnerReason: `Brilliant! Impostor ${impostor?.name || 'The Impostor'} was caught, but correctly guessed "${activeWord.word}" and steals the victory!`,
+        winnerReason: `Brilliant! Impostor ${caughtImpostor?.name || 'The Impostor'} was caught, but correctly guessed "${activeWord.word}" and steals victory for ${allImpostors.length > 1 ? 'the Impostors' : 'the Impostor'}!`,
       });
     } else {
       set({
@@ -352,7 +415,7 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
         impostorGuess: guess,
         impostorGuessCorrect: false,
         winner: 'citizens',
-        winnerReason: `Citizens Win! ${impostor?.name || 'The Impostor'} failed to guess the secret word "${activeWord.word}" (guessed "${guess}").`,
+        winnerReason: `Citizens Win! ${caughtImpostor?.name || 'The Impostor'} failed to guess the secret word "${activeWord.word}" (guessed "${guess}"). Impostor was ${impostorNames}.`,
       });
     }
   },
@@ -367,6 +430,7 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
         phase: 'lobby',
         activeWord: null,
         impostorId: null,
+        impostorIds: [],
         currentRoleRevealIndex: 0,
         clues: [],
         currentCluePlayerIndex: 0,
@@ -388,6 +452,7 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
       phase: 'home',
       activeWord: null,
       impostorId: null,
+      impostorIds: [],
       currentRoleRevealIndex: 0,
       clues: [],
       currentCluePlayerIndex: 0,
@@ -400,4 +465,33 @@ export const useGameStore = create<GameState & GameStoreActions>((set, get) => (
       winnerReason: '',
     });
   }
-}));
+}),
+    {
+      name: 'impostor_party_save_data_v3',
+      partialize: (state) => ({
+        players: state.players,
+        settings: state.settings,
+        soundEnabled: state.soundEnabled,
+      }),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<GameState> | undefined;
+        if (!persisted) return currentState;
+        return {
+          ...currentState,
+          players:
+            Array.isArray(persisted.players) && persisted.players.length >= 3
+              ? persisted.players
+              : currentState.players,
+          settings: persisted.settings
+            ? { ...currentState.settings, ...persisted.settings }
+            : currentState.settings,
+          soundEnabled:
+            typeof persisted.soundEnabled === 'boolean'
+              ? persisted.soundEnabled
+              : currentState.soundEnabled,
+        };
+      },
+    }
+  )
+);
+

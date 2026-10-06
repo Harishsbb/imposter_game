@@ -1,10 +1,14 @@
 import { useGameStore } from '../store/gameStore';
 import { CATEGORIES, CATEGORY_EMOJIS } from '../data/words';
+import { getMaxImpostors } from '../utils/gameLogic';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Users, Check, Sparkles, Timer, Lightbulb, EyeOff, ShieldCheck, Dices } from 'lucide-react';
+import { ArrowLeft, Users, Check, Sparkles, Lightbulb, EyeOff, ShieldCheck, Dices, UserX } from 'lucide-react';
 
 export const CreateGame = () => {
   const { settings, updateSettings, setPhase } = useGameStore();
+
+  const maxAllowedImpostors = getMaxImpostors(settings.playerCount);
+  const currentImpostors = Math.min(settings.impostorCount || 1, maxAllowedImpostors);
 
   const handlePlayerCountChange = (count: number) => {
     const clamped = Math.max(3, Math.min(12, count));
@@ -251,8 +255,8 @@ export const CreateGame = () => {
               </div>
               <p className="text-[10px] text-slate-400 mt-0.5">
                 {settings.randomStartingPlayer
-                  ? 'Game and clues start with a randomly chosen player'
-                  : 'Game starts in lobby player order (Player 1 first)'}
+                  ? 'Round begins with a random Citizen (Impostor never starts first)'
+                  : 'Round begins with Player 1 (Impostor never starts first)'}
               </p>
             </div>
           </div>
@@ -277,32 +281,53 @@ export const CreateGame = () => {
           </button>
         </div>
 
-        {/* Discussion Timer Setting */}
+        {/* Impostor Count Setting */}
         <div className="glass-card p-3.5 rounded-2xl border border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center">
-              <Timer size={16} />
+            <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center">
+              <UserX size={16} />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-white">Discussion Timer</h4>
-              <p className="text-[10px] text-slate-400">Debate duration</p>
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-xs font-bold text-white">Number of Impostors</h4>
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 bg-rose-500/20 text-rose-300 rounded-md border border-rose-500/30">
+                  {currentImpostors} {currentImpostors === 1 ? 'Impostor' : 'Impostors'}
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 mt-0.5">
+                {maxAllowedImpostors === 1 ? 'Max 1 for 3–4 players' : `Choose 1 to ${maxAllowedImpostors} impostors`}
+              </p>
             </div>
           </div>
 
-          <div className="flex gap-1.5">
-            {[45, 60, 90, 120].map((seconds) => (
-              <button
-                key={seconds}
-                onClick={() => updateSettings({ discussionTimerSeconds: seconds })}
-                className={`text-xs px-2.5 py-1 rounded-lg font-bold transition-all ${
-                  settings.discussionTimerSeconds === seconds
-                    ? 'bg-purple-600 text-white font-black shadow-md shadow-purple-600/30'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
-                }`}
-              >
-                {seconds}s
-              </button>
-            ))}
+          <div className="flex gap-1 bg-slate-950/40 p-1 rounded-xl border border-white/5">
+            {[1, 2, 3].map((count) => {
+              const isDisabled = count > maxAllowedImpostors;
+              const isSelected = currentImpostors === count;
+
+              return (
+                <button
+                  key={count}
+                  type="button"
+                  disabled={isDisabled}
+                  onClick={() => updateSettings({ impostorCount: count })}
+                  className={`w-7 h-7 rounded-lg text-xs font-black transition-all ${
+                    isSelected
+                      ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-md shadow-rose-500/30 scale-105'
+                      : isDisabled
+                      ? 'opacity-20 cursor-not-allowed text-slate-500'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }`}
+                  title={
+                    isDisabled
+                      ? `Requires at least ${count === 2 ? 5 : 7} players`
+                      : `Set to ${count} Impostor${count > 1 ? 's' : ''}`
+                  }
+                >
+                  {count}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -314,7 +339,7 @@ export const CreateGame = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <ShieldCheck size={13} className="text-purple-400" />
-            <span>Mode: <strong className="text-white">Classic (1 Impostor)</strong></span>
+            <span>Mode: <strong className="text-white">{currentImpostors} {currentImpostors === 1 ? 'Impostor' : 'Impostors'}</strong></span>
           </div>
         </div>
       </div>

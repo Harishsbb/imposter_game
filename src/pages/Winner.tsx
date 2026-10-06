@@ -13,6 +13,7 @@ export const Winner = () => {
     activeWord,
     players,
     impostorId,
+    impostorIds,
     clues,
     votes,
     impostorGuess,
@@ -138,7 +139,7 @@ export const Winner = () => {
 
           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
             {players.map((p) => {
-              const isThisImpostor = p.id === impostorId;
+              const isThisImpostor = p.role === 'impostor' || p.id === impostorId || (impostorIds && impostorIds.includes(p.id));
               const playerClue = clues.find((c) => c.playerId === p.id);
               const voteTargetId = votes[p.id];
               const votedFor = players.find((t) => t.id === voteTargetId);
