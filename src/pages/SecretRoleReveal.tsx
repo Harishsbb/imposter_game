@@ -16,6 +16,7 @@ export const SecretRoleReveal = () => {
     nextRoleReveal,
     soundEnabled,
     settings,
+    startingPlayerId,
   } = useGameStore();
 
   const [isRevealed, setIsRevealed] = useState(false);
@@ -24,6 +25,7 @@ export const SecretRoleReveal = () => {
   if (!currentPlayer || !activeWord) return null;
 
   const isImpostor = currentPlayer.role === 'impostor' || currentPlayer.id === impostorId || (impostorIds && impostorIds.includes(currentPlayer.id));
+  const isStarter = currentPlayer.id === (startingPlayerId || players[0]?.id) || currentRoleRevealIndex === 0;
   const isLastPlayer = currentRoleRevealIndex === players.length - 1;
 
   const handleReveal = () => {
@@ -46,7 +48,7 @@ export const SecretRoleReveal = () => {
           <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
             Secret Role Reveal
           </span>
-          {currentRoleRevealIndex === 0 && (
+          {isStarter && (
             <span className="text-[10px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
               <Dices size={12} className="text-amber-400" />
               <span>Starts Round (Citizen)</span>
@@ -76,7 +78,7 @@ export const SecretRoleReveal = () => {
               </div>
 
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
-                {currentRoleRevealIndex === 0 ? (
+                {isStarter ? (
                   <span className="text-amber-400 font-extrabold flex items-center justify-center gap-1.5">
                     <Dices size={14} /> Round Starts With (Citizen)
                   </span>
@@ -185,7 +187,7 @@ export const SecretRoleReveal = () => {
                     Category: {activeWord.category}
                   </span>
 
-                  {currentRoleRevealIndex === 0 && (
+                  {isStarter && (
                     <span className="text-[11px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                       <Dices size={13} className="text-amber-400" />
                       <span>Round Starter: You speak the first clue aloud!</span>

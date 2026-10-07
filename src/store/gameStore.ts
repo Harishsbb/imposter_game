@@ -16,9 +16,10 @@ interface GameStoreActions {
   toggleRandomStartingPlayer: () => void;
   setImpostorCount: (count: number) => void;
   shuffleCurrentPlayers: () => void;
+  setStartingPlayer: (playerId: string | 'random') => void;
 
   // Game lifecycle
-  startNewGame: () => void;
+  startNewGame: (startingPlayerId?: string | 'random') => void;
   nextRoleReveal: () => void;
   submitClue: (clue: string) => void;
   startVoting: () => void;
@@ -39,6 +40,7 @@ const initialSettings: GameSettings = {
   showImpostorHint: false, // Default is OFF
   randomStartingPlayer: true,
   impostorCount: 1,
+  startingPlayerId: null,
 };
 
 const initialPlayers: Player[] = [
@@ -71,6 +73,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
   phase: 'home',
   settings: initialSettings,
   players: getMigratedPlayers(),
+  startingPlayerId: null,
   activeWord: null,
   impostorId: null,
   impostorIds: [],
@@ -205,12 +208,36 @@ export const useGameStore = create<GameState & GameStoreActions>()(
   toggleRandomStartingPlayer: () => {
     const { settings, soundEnabled } = get();
     playClickSound(soundEnabled);
+    const nextRandom = !settings.randomStartingPlayer;
     set({
       settings: {
         ...settings,
-        randomStartingPlayer: !settings.randomStartingPlayer,
+        randomStartingPlayer: nextRandom,
+        startingPlayerId: nextRandom ? null : (settings.startingPlayerId || null),
       }
     });
+  },
+
+  setStartingPlayer: (playerId: string | 'random') => {
+    const { settings, soundEnabled } = get();
+    playClickSound(soundEnabled);
+    if (playerId === 'random') {
+      set({
+        settings: {
+          ...settings,
+          randomStartingPlayer: true,
+          startingPlayerId: null,
+        }
+      });
+    } else {
+      set({
+        settings: {
+          ...settings,
+          randomStartingPlayer: false,
+          startingPlayerId: playerId,
+        }
+      });
+    }
   },
 
   setImpostorCount: (count) => {
@@ -229,7 +256,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
     set({ players: shufflePlayers(players) });
   },
 
-  startNewGame: () => {
+  startNewGame: (chosenStarterId?: string | 'random') => {
     const { settings, players, soundEnabled } = get();
     if (players.length < 3) return;
 
@@ -239,19 +266,43 @@ export const useGameStore = create<GameState & GameStoreActions>()(
       name: p.name.trim() || `Player ${idx + 1}`,
     }));
 
-    // If randomStartingPlayer is enabled, randomize player order so the game starts with a random person
-    const playersToUse = settings.randomStartingPlayer ? shufflePlayers(cleaned) : cleaned;
+    // Determine target starting player ID: parameter overrides saved setting
+    const targetStarter = chosenStarterId !== undefined 
+      ? chosenStarterId 
+      : (settings.startingPlayerId || (settings.randomStartingPlayer ? 'random' : cleaned[0].id));
+
+    let playersToUse: Player[];
+
+    if (targetStarter === 'random') {
+      // Pick random starter and randomize player order
+      playersToUse = shufflePlayers(cleaned);
+    } else {
+      // Specific player chosen: rotate so chosen player is at index 0 (preserving natural circle order)
+      const startIndex = cleaned.findIndex((p) => p.id === targetStarter);
+      if (startIndex !== -1) {
+        playersToUse = [
+          ...cleaned.slice(startIndex),
+          ...cleaned.slice(0, startIndex),
+        ];
+      } else {
+        playersToUse = shufflePlayers(cleaned);
+      }
+    }
+
+    const startingPlayer = playersToUse[0];
 
     // Pick random word and assign roles
     const activeWord = pickRandomWord(settings.selectedCategories);
     const maxAllowed = getMaxImpostors(playersToUse.length);
     const chosenCount = Math.min(Math.max(1, settings.impostorCount || 1), maxAllowed);
+    // Index 0 (startingPlayer) is guaranteed to be a Citizen by assignRoles!
     const { players: assignedPlayers, impostorIds, impostorId } = assignRoles(playersToUse, chosenCount);
 
     playClickSound(soundEnabled);
 
     set({
       players: assignedPlayers,
+      startingPlayerId: startingPlayer.id,
       activeWord,
       impostorId,
       impostorIds,

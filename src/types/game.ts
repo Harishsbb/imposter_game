@@ -53,12 +53,14 @@ export interface GameSettings {
   showImpostorHint: boolean;
   randomStartingPlayer: boolean;
   impostorCount: number;
+  startingPlayerId?: string | null;
 }
 
 export interface GameState {
   phase: GamePhase;
   settings: GameSettings;
   players: Player[];
+  startingPlayerId: string | null;
   activeWord: WordEntry | null;
   impostorId: string | null;
   impostorIds: string[];
