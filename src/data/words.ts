@@ -1223,6 +1223,1026 @@ export const WORD_DATABASE: WordEntry[] = [
     category: "Indian Culture",
     difficulty: "easy",
     relatedWords: ["Shell", "Water", "Tree"]
+  },
+  {
+    word: "Sushi",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Roll","Raw","Rice"]
+  },
+  {
+    word: "Tacos",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Shell","Spicy","Mexican"]
+  },
+  {
+    word: "Cotton Candy",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Fluffy","Pink","Carnival"]
+  },
+  {
+    word: "Waffle",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Syrup","Grid","Breakfast"]
+  },
+  {
+    word: "Pancake",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Stack","Syrup","Fluffy"]
+  },
+  {
+    word: "Shawarma",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Wrap","Garlic","Meat"]
+  },
+  {
+    word: "Nachos",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Cheese","Chips","Jalapeno"]
+  },
+  {
+    word: "Marshmallow",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Campfire","Puffy","White"]
+  },
+  {
+    word: "Croissant",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["French","Flaky","Bakery"]
+  },
+  {
+    word: "Ramen",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Noodles","Broth","Chopsticks"]
+  },
+  {
+    word: "Brownie",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Fudge","Chocolate","Square"]
+  },
+  {
+    word: "Bubble Tea",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Boba","Straw","Tapioca"]
+  },
+  {
+    word: "Lasagna",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Layers","Pasta","Cheese"]
+  },
+  {
+    word: "Guacamole",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Avocado","Dip","Green"]
+  },
+  {
+    word: "Dumpling",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Steam","Pocket","Dip"]
+  },
+  {
+    word: "Lollipop",
+    category: "Food",
+    difficulty: "easy",
+    relatedWords: ["Stick","Candy","Sweet"]
+  },
+  {
+    word: "Chameleon",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Camouflage","Colors","Lizard"]
+  },
+  {
+    word: "Octopus",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Tentacles","Eight","Ink"]
+  },
+  {
+    word: "Kangaroo",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Pouch","Hop","Australia"]
+  },
+  {
+    word: "Penguin",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Tuxedo","Antarctica","Waddle"]
+  },
+  {
+    word: "Sloth",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Slow","Tree","Lazy"]
+  },
+  {
+    word: "Flamingo",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Pink","One Leg","Beak"]
+  },
+  {
+    word: "Platypus",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Beak","Tail","Weird"]
+  },
+  {
+    word: "Hedgehog",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Spikes","Roll","Sonic"]
+  },
+  {
+    word: "Scorpion",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Stinger","Desert","Venom"]
+  },
+  {
+    word: "Dolphin",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Intelligent","Ocean","Jump"]
+  },
+  {
+    word: "Peacock",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Feathers","Fan","Colorful"]
+  },
+  {
+    word: "Shark",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Fin","Jaws","Predator"]
+  },
+  {
+    word: "Cheetah",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Fast","Spots","Sprint"]
+  },
+  {
+    word: "Koala",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Eucalyptus","Sleepy","Australia"]
+  },
+  {
+    word: "Owl",
+    category: "Animals",
+    difficulty: "easy",
+    relatedWords: ["Nocturnal","Wise","Hoot"]
+  },
+  {
+    word: "Smartwatch",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Wrist","Steps","Heart"]
+  },
+  {
+    word: "VR Headset",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Virtual","Goggles","Immersive"]
+  },
+  {
+    word: "Hacker",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Code","Breach","Cyber"]
+  },
+  {
+    word: "Artificial Intelligence",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Smart","Neural","Future"]
+  },
+  {
+    word: "Bluetooth",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Wireless","Connect","Pair"]
+  },
+  {
+    word: "Cyberpunk",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Neon","Future","Augment"]
+  },
+  {
+    word: "Hologram",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["3D","Light","Projection"]
+  },
+  {
+    word: "Power Bank",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Portable","Charger","Battery"]
+  },
+  {
+    word: "Wi-Fi",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Signal","Router","Password"]
+  },
+  {
+    word: "3D Printer",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Plastic","Layers","Prototype"]
+  },
+  {
+    word: "Laser",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Beam","Red","Focus"]
+  },
+  {
+    word: "GPS",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Maps","Satellite","Navigate"]
+  },
+  {
+    word: "Earbuds",
+    category: "Technology",
+    difficulty: "easy",
+    relatedWords: ["Wireless","Audio","In-ear"]
+  },
+  {
+    word: "Superhero",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Cape","Powers","Costume"]
+  },
+  {
+    word: "Time Travel",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Past","Future","Paradox"]
+  },
+  {
+    word: "Plot Twist",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Shock","Ending","Climax"]
+  },
+  {
+    word: "Lightsaber",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Jedi","Laser","Glow"]
+  },
+  {
+    word: "Zombie",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Undead","Brains","Apocalypse"]
+  },
+  {
+    word: "Vampire",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Fangs","Blood","Garlic"]
+  },
+  {
+    word: "Oscar",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Golden","Statue","Academy"]
+  },
+  {
+    word: "Stunt Double",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Action","Crash","Substitute"]
+  },
+  {
+    word: "Red Carpet",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Premiere","Celebrities","Walk"]
+  },
+  {
+    word: "Director",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Action","Cut","Chair"]
+  },
+  {
+    word: "Sequel",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Part 2","Franchise","Return"]
+  },
+  {
+    word: "Clapperboard",
+    category: "Movies",
+    difficulty: "easy",
+    relatedWords: ["Scene","Take","Sound"]
+  },
+  {
+    word: "Skateboarding",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Deck","Ollie","Ramp"]
+  },
+  {
+    word: "Surfing",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Wave","Board","Ocean"]
+  },
+  {
+    word: "Archery",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Bow","Arrow","Bullseye"]
+  },
+  {
+    word: "Bowling",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Pins","Strike","Alley"]
+  },
+  {
+    word: "Skydiving",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Parachute","Plane","Freefall"]
+  },
+  {
+    word: "Snowboarding",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Snow","Mountain","Goggles"]
+  },
+  {
+    word: "Formula 1",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Racecar","Pit Stop","Speed"]
+  },
+  {
+    word: "Karate",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Black Belt","Kick","Dojo"]
+  },
+  {
+    word: "Rock Climbing",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Harness","Grip","Cliff"]
+  },
+  {
+    word: "Bungee Jump",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["Cord","Bridge","Drop"]
+  },
+  {
+    word: "Marathon",
+    category: "Sports",
+    difficulty: "easy",
+    relatedWords: ["42km","Stamina","Runner"]
+  },
+  {
+    word: "Haunted House",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Ghosts","Spooky","Creaky"]
+  },
+  {
+    word: "Volcano",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Lava","Eruption","Crater"]
+  },
+  {
+    word: "Amusement Park",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Rollercoaster","Ferris Wheel","Tickets"]
+  },
+  {
+    word: "Secret Bunker",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Underground","Hidden","Shelter"]
+  },
+  {
+    word: "Casino",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Roulette","Poker","Jackpot"]
+  },
+  {
+    word: "Submarine",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Periscope","Underwater","Sonar"]
+  },
+  {
+    word: "Lighthouse",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Beacon","Coast","Tower"]
+  },
+  {
+    word: "Treehouse",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Branches","Wooden","Hideout"]
+  },
+  {
+    word: "Pyramid",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Pharaoh","Tomb","Desert"]
+  },
+  {
+    word: "Prison",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Bars","Escape","Cell"]
+  },
+  {
+    word: "Waterpark",
+    category: "Places",
+    difficulty: "easy",
+    relatedWords: ["Slides","Splash","Tubes"]
+  },
+  {
+    word: "Rubik's Cube",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Colors","Puzzle","Twist"]
+  },
+  {
+    word: "Boomerang",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Return","Throw","Curved"]
+  },
+  {
+    word: "Hourglass",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Sand","Time","Turn"]
+  },
+  {
+    word: "Compass",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["North","Needle","Navigate"]
+  },
+  {
+    word: "Yo-Yo",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["String","Trick","Spin"]
+  },
+  {
+    word: "Treasure Chest",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Loot","Lock","Gold"]
+  },
+  {
+    word: "Sunglasses",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Shade","Cool","UV"]
+  },
+  {
+    word: "Hammock",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Trees","Relax","Swing"]
+  },
+  {
+    word: "Magnifying Glass",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Detective","Lens","Zoom"]
+  },
+  {
+    word: "Megaphone",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Loud","Voice","Shout"]
+  },
+  {
+    word: "Swiss Knife",
+    category: "Objects",
+    difficulty: "easy",
+    relatedWords: ["Blades","Tools","Pocket"]
+  },
+  {
+    word: "Lightning",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Thunder","Electric","Flash"]
+  },
+  {
+    word: "Tornado",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Funnel","Wind","Storm"]
+  },
+  {
+    word: "Aurora",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Northern Lights","Night Sky","Glow"]
+  },
+  {
+    word: "Tsunami",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Wave","Giant","Flood"]
+  },
+  {
+    word: "Avalanche",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Snow","Slide","Mountain"]
+  },
+  {
+    word: "Quicksand",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Sink","Trap","Desert"]
+  },
+  {
+    word: "Coral Reef",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Ocean","Fish","Colorful"]
+  },
+  {
+    word: "Meteor Shower",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Shooting Star","Night","Wish"]
+  },
+  {
+    word: "Geyser",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Hot Water","Erupt","Steam"]
+  },
+  {
+    word: "Cactus",
+    category: "Nature",
+    difficulty: "easy",
+    relatedWords: ["Spikes","Desert","Succulent"]
+  },
+  {
+    word: "Black Hole",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Gravity","Singularity","Void"]
+  },
+  {
+    word: "Supernova",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Explosion","Star","Bright"]
+  },
+  {
+    word: "Solar Eclipse",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Shadow","Moon","Sun"]
+  },
+  {
+    word: "Wormhole",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Shortcut","Portal","Spacetime"]
+  },
+  {
+    word: "Nebula",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Stardust","Cosmic","Gas"]
+  },
+  {
+    word: "UFO",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Flying Saucer","Alien","Hover"]
+  },
+  {
+    word: "Zero Gravity",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Float","Weightless","Space"]
+  },
+  {
+    word: "Milky Way",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Galaxy","Spiral","Stars"]
+  },
+  {
+    word: "Space Station",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["ISS","Orbit","Dock"]
+  },
+  {
+    word: "Moonwalk",
+    category: "Space",
+    difficulty: "easy",
+    relatedWords: ["Apollo","Dust","Footstep"]
+  },
+  {
+    word: "Detention",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Punishment","After Class","Silence"]
+  },
+  {
+    word: "Cheat Sheet",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Secret","Exam","Hide"]
+  },
+  {
+    word: "Science Fair",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Volcano","Project","Ribbon"]
+  },
+  {
+    word: "Recess",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Break","Playground","Fun"]
+  },
+  {
+    word: "Hall Pass",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Permission","Corridor","Bathroom"]
+  },
+  {
+    word: "Pop Quiz",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Surprise","Test","Panic"]
+  },
+  {
+    word: "Microscope",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Cells","Slide","Zoom"]
+  },
+  {
+    word: "Graduation Cap",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Degree","Tassel","Throw"]
+  },
+  {
+    word: "Tiffin Box",
+    category: "School",
+    difficulty: "easy",
+    relatedWords: ["Lunch","Snacks","Steel"]
+  },
+  {
+    word: "Minecraft",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Blocks","Craft","Creeper"]
+  },
+  {
+    word: "Impostor",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Among Us","Sus","Sabotage"]
+  },
+  {
+    word: "Respawn",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Revive","Checkpoint","Life"]
+  },
+  {
+    word: "Loot Box",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Random","Reward","Gacha"]
+  },
+  {
+    word: "Speedrun",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Fast","Timer","Record"]
+  },
+  {
+    word: "Battle Royale",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["100 Players","Storm","Winner"]
+  },
+  {
+    word: "Easter Egg",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Secret","Hidden","Surprise"]
+  },
+  {
+    word: "Glitch",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Bug","Teleport","Broken"]
+  },
+  {
+    word: "Stealth",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Crouch","Silent","Shadow"]
+  },
+  {
+    word: "NPC",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Dialogue","Quest","Bot"]
+  },
+  {
+    word: "Headshot",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["Critical","Sniper","Direct"]
+  },
+  {
+    word: "Health Bar",
+    category: "Gaming",
+    difficulty: "easy",
+    relatedWords: ["HP","Damage","Hearts"]
+  },
+  {
+    word: "Pani Puri",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Golgappa","Crispy","Spicy Water"]
+  },
+  {
+    word: "Gulab Jamun",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Sweet","Syrup","Round"]
+  },
+  {
+    word: "Auto Rickshaw",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Three Wheels","Meter","Tuk Tuk"]
+  },
+  {
+    word: "Garba",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Dandiya","Dance","Navratri"]
+  },
+  {
+    word: "Cricket Match",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Over","Sixer","Wicket"]
+  },
+  {
+    word: "Bollywood",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Cinema","Dance","Drama"]
+  },
+  {
+    word: "Taj Mahal",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Marble","Monument","Agra"]
+  },
+  {
+    word: "Masala Dosa",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Crispy","Potato","Chutney"]
+  },
+  {
+    word: "Lassi",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Yogurt","Sweet","Punjab"]
+  },
+  {
+    word: "Mysore Pak",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Ghee","Sweet","Gram Flour"]
+  },
+  {
+    word: "Kolam",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Powder","Doorstep","Patterns"]
+  },
+  {
+    word: "Thali",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Platter","Dishes","Feast"]
+  },
+  {
+    word: "Kite Festival",
+    category: "Indian Culture",
+    difficulty: "easy",
+    relatedWords: ["Makar Sankranti","Thread","Sky"]
+  },
+  {
+    word: "Batman",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Bat","Cave","Gotham"]
+  },
+  {
+    word: "Spider-Man",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Web","Climb","Spidey"]
+  },
+  {
+    word: "Iron Man",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Armor","Arc Reactor","Billionaire"]
+  },
+  {
+    word: "Thor",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Hammer","Lightning","Asgard"]
+  },
+  {
+    word: "Superman",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Krypton","Laser Eyes","Cape"]
+  },
+  {
+    word: "Wolverine",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Claws","Regenerate","Adamantium"]
+  },
+  {
+    word: "Captain America",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Shield","Star","Soldier"]
+  },
+  {
+    word: "Hulk",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Smash","Green","Anger"]
+  },
+  {
+    word: "Doctor Strange",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Magic","Portal","Cloak"]
+  },
+  {
+    word: "Deadpool",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Mercenary","Red Suit","Fourth Wall"]
+  },
+  {
+    word: "Flash",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Super Speed","Lightning","Red"]
+  },
+  {
+    word: "Wonder Woman",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Lasso","Amazon","Bracelets"]
+  },
+  {
+    word: "Joker",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Laugh","Card","Clown"]
+  },
+  {
+    word: "Thanos",
+    category: "Superheroes",
+    difficulty: "easy",
+    relatedWords: ["Snap","Gauntlet","Infinity Stones"]
+  },
+  {
+    word: "Detective",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Magnifying Glass","Clues","Case"]
+  },
+  {
+    word: "Secret Agent",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["007","Gadgets","Mission"]
+  },
+  {
+    word: "Undercover",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Disguise","Infiltrate","Identity"]
+  },
+  {
+    word: "Handcuffs",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Arrest","Metal","Key"]
+  },
+  {
+    word: "Fingerprint",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Dust","Evidence","Crime Scene"]
+  },
+  {
+    word: "Lie Detector",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Pulse","Polygraph","Truth"]
+  },
+  {
+    word: "Walkie-Talkie",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Over and Out","Radio","Channel"]
+  },
+  {
+    word: "Vault",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Combination","Steel","Bank"]
+  },
+  {
+    word: "Disguise",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Fake Mustache","Wig","Glasses"]
+  },
+  {
+    word: "Silencer",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Pistol","Quiet","Spy"]
+  },
+  {
+    word: "Invisible Ink",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Lemon Juice","Heat","Secret Message"]
+  },
+  {
+    word: "Laser Grid",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Security","Alarm","Dodge"]
+  },
+  {
+    word: "Poison",
+    category: "Mystery & Spies",
+    difficulty: "easy",
+    relatedWords: ["Antidote","Drop","Danger"]
   }
 ];
 
@@ -1238,7 +2258,9 @@ export const CATEGORIES = [
   "Space",
   "School",
   "Gaming",
-  "Indian Culture"
+  "Indian Culture",
+  "Superheroes",
+  "Mystery & Spies"
 ] as const;
 
 export const CATEGORY_EMOJIS: Record<string, string> = {
@@ -1253,7 +2275,9 @@ export const CATEGORY_EMOJIS: Record<string, string> = {
   "Space": "🚀",
   "School": "📚",
   "Gaming": "🎮",
-  "Indian Culture": "🪔"
+  "Indian Culture": "🪔",
+  "Superheroes": "🦸",
+  "Mystery & Spies": "🕵️"
 };
 
 export const WORD_EMOJIS: Record<string, string> = {
@@ -1479,5 +2503,177 @@ export const WORD_EMOJIS: Record<string, string> = {
   "Kurta": "👕",
   "Henna": "✋",
   "Temple": "🛕",
-  "Coconut": "🥥"
+  "Coconut": "🥥",
+
+  // New Interesting Words
+  "Sushi": "🍣",
+  "Tacos": "🌮",
+  "Cotton Candy": "🍭",
+  "Waffle": "🧇",
+  "Pancake": "🥞",
+  "Shawarma": "🌯",
+  "Nachos": "🧀",
+  "Marshmallow": "🍡",
+  "Croissant": "🥐",
+  "Ramen": "🍜",
+  "Brownie": "🍫",
+  "Bubble Tea": "🧋",
+  "Lasagna": "🍝",
+  "Guacamole": "🥑",
+  "Dumpling": "🥟",
+  "Lollipop": "🍭",
+  "Chameleon": "🦎",
+  "Octopus": "🐙",
+  "Kangaroo": "🦘",
+  "Penguin": "🐧",
+  "Sloth": "🦥",
+  "Flamingo": "🦩",
+  "Platypus": "🦆",
+  "Hedgehog": "🦔",
+  "Scorpion": "🦂",
+  "Dolphin": "🐬",
+  "Peacock": "🦚",
+  "Shark": "🦈",
+  "Cheetah": "🐆",
+  "Koala": "🐨",
+  "Owl": "🦉",
+  "Smartwatch": "⌚",
+  "VR Headset": "🥽",
+  "Hacker": "👨‍💻",
+  "Artificial Intelligence": "🧠",
+  "Bluetooth": "📶",
+  "Cyberpunk": "🦾",
+  "Hologram": "📽️",
+  "Power Bank": "🔋",
+  "Wi-Fi": "📡",
+  "3D Printer": "🖨️",
+  "Laser": "🔴",
+  "GPS": "📍",
+  "Earbuds": "🎧",
+  "Superhero": "🦸",
+  "Time Travel": "⏳",
+  "Plot Twist": "🤯",
+  "Lightsaber": "⚔️",
+  "Zombie": "🧟",
+  "Vampire": "🧛",
+  "Oscar": "🏆",
+  "Stunt Double": "💥",
+  "Red Carpet": "👠",
+  "Director": "🎬",
+  "Sequel": "📽️",
+  "Clapperboard": "🎬",
+  "Skateboarding": "🛹",
+  "Surfing": "🏄",
+  "Archery": "🏹",
+  "Bowling": "🎳",
+  "Skydiving": "🪂",
+  "Snowboarding": "🏂",
+  "Formula 1": "🏎️",
+  "Karate": "🥋",
+  "Rock Climbing": "🧗",
+  "Bungee Jump": "🤸",
+  "Marathon": "🏃",
+  "Haunted House": "🏚️",
+  "Volcano": "🌋",
+  "Amusement Park": "🎢",
+  "Secret Bunker": "🚪",
+  "Casino": "🎰",
+  "Submarine": "🚢",
+  "Lighthouse": "🗼",
+  "Treehouse": "🏡",
+  "Pyramid": "🔺",
+  "Prison": "⛓️",
+  "Waterpark": "🌊",
+  "Rubik's Cube": "🎲",
+  "Boomerang": "🪃",
+  "Hourglass": "⏳",
+  "Compass": "🧭",
+  "Yo-Yo": "🪀",
+  "Treasure Chest": "🪙",
+  "Sunglasses": "🕶️",
+  "Hammock": "🏖️",
+  "Magnifying Glass": "🔍",
+  "Megaphone": "📢",
+  "Swiss Knife": "🔪",
+  "Lightning": "⚡",
+  "Tornado": "🌪️",
+  "Aurora": "🌌",
+  "Tsunami": "🌊",
+  "Avalanche": "❄️",
+  "Quicksand": "⏳",
+  "Coral Reef": "🪸",
+  "Meteor Shower": "🌠",
+  "Geyser": "♨️",
+  "Cactus": "🌵",
+  "Black Hole": "🕳️",
+  "Supernova": "💥",
+  "Solar Eclipse": "🌑",
+  "Wormhole": "🌀",
+  "Nebula": "🌌",
+  "UFO": "🛸",
+  "Zero Gravity": "🧑‍🚀",
+  "Milky Way": "🌌",
+  "Space Station": "🛰️",
+  "Moonwalk": "👨‍🚀",
+  "Detention": "🪑",
+  "Cheat Sheet": "📝",
+  "Science Fair": "🔬",
+  "Recess": "🏃",
+  "Hall Pass": "🎟️",
+  "Pop Quiz": "📑",
+  "Microscope": "🔬",
+  "Graduation Cap": "🎓",
+  "Tiffin Box": "🍱",
+  "Minecraft": "🟩",
+  "Impostor": "🕵️",
+  "Respawn": "🔄",
+  "Loot Box": "🎁",
+  "Speedrun": "⏱️",
+  "Battle Royale": "🪂",
+  "Easter Egg": "🥚",
+  "Glitch": "👾",
+  "Stealth": "🥷",
+  "NPC": "🤖",
+  "Headshot": "🎯",
+  "Health Bar": "❤️",
+  "Pani Puri": "🍲",
+  "Gulab Jamun": "🟤",
+  "Auto Rickshaw": "🛺",
+  "Garba": "💃",
+  "Cricket Match": "🏏",
+  "Bollywood": "🎬",
+  "Taj Mahal": "🏛️",
+  "Masala Dosa": "🥞",
+  "Lassi": "🥛",
+  "Mysore Pak": "🧈",
+  "Kolam": "🌸",
+  "Thali": "🍱",
+  "Kite Festival": "🪁",
+  "Batman": "🦇",
+  "Spider-Man": "🕷️",
+  "Iron Man": "🤖",
+  "Thor": "⚡",
+  "Superman": "🦸",
+  "Wolverine": "🐺",
+  "Captain America": "🛡️",
+  "Hulk": "🟢",
+  "Doctor Strange": "🔮",
+  "Deadpool": "⚔️",
+  "Flash": "⚡",
+  "Wonder Woman": "👑",
+  "Joker": "🃏",
+  "Thanos": "💎",
+  "Detective": "🕵️",
+  "Secret Agent": "🕶️",
+  "Undercover": "🥸",
+  "Handcuffs": "⛓️",
+  "Fingerprint": "🖐️",
+  "Lie Detector": "📈",
+  "Walkie-Talkie": "📻",
+  "Vault": "🔒",
+  "Disguise": "🥸",
+  "Silencer": "🔫",
+  "Invisible Ink": "📜",
+  "Laser Grid": "🚨",
+  "Poison": "🧪"
 };
