@@ -54,6 +54,24 @@ export function shufflePlayers(players: Player[]): Player[] {
 }
 
 /**
+ * Shuffles an array of players and ensures a random player starts.
+ * If excludeId is provided and there are at least 3 players, ensures the starter is not excludeId.
+ */
+export function getRandomPlayerOrder(players: Player[], excludeId?: string): Player[] {
+  if (players.length <= 1) return [...players];
+
+  const eligibleForFirst = excludeId && players.length >= 3
+    ? players.filter(p => p.id !== excludeId)
+    : players;
+
+  const starter = eligibleForFirst[Math.floor(Math.random() * eligibleForFirst.length)];
+  const remaining = players.filter(p => p.id !== starter.id);
+  const shuffledRemaining = shufflePlayers(remaining);
+
+  return [starter, ...shuffledRemaining];
+}
+
+/**
  * Calculates max allowable impostors based on player count.
  * 3-4 players: max 1
  * 5-6 players: max 2
@@ -79,9 +97,8 @@ export function assignRoles(
   const maxAllowed = getMaxImpostors(players.length);
   const countToAssign = Math.min(Math.max(1, impostorCount), maxAllowed);
 
-  // Pick random distinct indices for impostors from index 1 upwards.
-  // Index 0 is the starting player of the round and is GUARANTEED to be a Citizen.
-  const eligibleIndices = Array.from({ length: players.length - 1 }, (_, i) => i + 1);
+  // Pick random distinct indices for impostors from all players (any player can be an Impostor)
+  const eligibleIndices = Array.from({ length: players.length }, (_, i) => i);
   for (let i = eligibleIndices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [eligibleIndices[i], eligibleIndices[j]] = [eligibleIndices[j], eligibleIndices[i]];

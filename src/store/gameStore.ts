@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { GamePhase, GameSettings, GameState, Player } from '../types/game';
-import { assignRoles, checkImpostorGuess, getMaxImpostors, pickRandomWord, PLAYER_AVATARS, PLAYER_COLORS, shufflePlayers, SUGGESTED_NAMES, tallyVotes } from '../utils/gameLogic';
+import { assignRoles, checkImpostorGuess, getMaxImpostors, pickRandomWord, PLAYER_AVATARS, PLAYER_COLORS, shufflePlayers, getRandomPlayerOrder, SUGGESTED_NAMES, tallyVotes } from '../utils/gameLogic';
 import { playClickSound, playSecretRevealSound, playVictorySound, playVoteSound } from '../utils/soundEffects';
 
 interface GameStoreActions {
@@ -13,13 +13,11 @@ interface GameStoreActions {
   populateDefaultPlayers: (count?: number) => void;
   toggleSound: () => void;
   toggleImpostorHint: () => void;
-  toggleRandomStartingPlayer: () => void;
   setImpostorCount: (count: number) => void;
   shuffleCurrentPlayers: () => void;
-  setStartingPlayer: (playerId: string | 'random') => void;
 
   // Game lifecycle
-  startNewGame: (startingPlayerId?: string | 'random') => void;
+  startNewGame: () => void;
   nextRoleReveal: () => void;
   submitClue: (clue: string) => void;
   startVoting: () => void;
@@ -38,9 +36,7 @@ const initialSettings: GameSettings = {
   gameMode: 'classic',
   discussionTimerSeconds: 60,
   showImpostorHint: false, // Default is OFF
-  randomStartingPlayer: true,
   impostorCount: 1,
-  startingPlayerId: null,
 };
 
 const initialPlayers: Player[] = [
@@ -73,7 +69,6 @@ export const useGameStore = create<GameState & GameStoreActions>()(
   phase: 'home',
   settings: initialSettings,
   players: getMigratedPlayers(),
-  startingPlayerId: null,
   activeWord: null,
   impostorId: null,
   impostorIds: [],
@@ -81,6 +76,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
   clues: [],
   currentCluePlayerIndex: 0,
   votes: {},
+  votingOrder: [],
   currentVoterIndex: 0,
   eliminatedPlayerId: null,
   impostorGuess: '',
@@ -205,41 +201,6 @@ export const useGameStore = create<GameState & GameStoreActions>()(
     });
   },
 
-  toggleRandomStartingPlayer: () => {
-    const { settings, soundEnabled } = get();
-    playClickSound(soundEnabled);
-    const nextRandom = !settings.randomStartingPlayer;
-    set({
-      settings: {
-        ...settings,
-        randomStartingPlayer: nextRandom,
-        startingPlayerId: nextRandom ? null : (settings.startingPlayerId || null),
-      }
-    });
-  },
-
-  setStartingPlayer: (playerId: string | 'random') => {
-    const { settings, soundEnabled } = get();
-    playClickSound(soundEnabled);
-    if (playerId === 'random') {
-      set({
-        settings: {
-          ...settings,
-          randomStartingPlayer: true,
-          startingPlayerId: null,
-        }
-      });
-    } else {
-      set({
-        settings: {
-          ...settings,
-          randomStartingPlayer: false,
-          startingPlayerId: playerId,
-        }
-      });
-    }
-  },
-
   setImpostorCount: (count) => {
     const { players, soundEnabled } = get();
     playClickSound(soundEnabled);
@@ -256,7 +217,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
     set({ players: shufflePlayers(players) });
   },
 
-  startNewGame: (chosenStarterId?: string | 'random') => {
+  startNewGame: () => {
     const { settings, players, soundEnabled } = get();
     if (players.length < 3) return;
 
@@ -266,30 +227,8 @@ export const useGameStore = create<GameState & GameStoreActions>()(
       name: p.name.trim() || `Player ${idx + 1}`,
     }));
 
-    // Determine target starting player ID: parameter overrides saved setting
-    const targetStarter = chosenStarterId !== undefined 
-      ? chosenStarterId 
-      : (settings.startingPlayerId || (settings.randomStartingPlayer ? 'random' : cleaned[0].id));
-
-    let playersToUse: Player[];
-
-    if (targetStarter === 'random') {
-      // Pick random starter and randomize player order
-      playersToUse = shufflePlayers(cleaned);
-    } else {
-      // Specific player chosen: rotate so chosen player is at index 0 (preserving natural circle order)
-      const startIndex = cleaned.findIndex((p) => p.id === targetStarter);
-      if (startIndex !== -1) {
-        playersToUse = [
-          ...cleaned.slice(startIndex),
-          ...cleaned.slice(0, startIndex),
-        ];
-      } else {
-        playersToUse = shufflePlayers(cleaned);
-      }
-    }
-
-    const startingPlayer = playersToUse[0];
+    // Randomize player order so game starts with a random person (different from default lobby player 1)
+    const playersToUse = getRandomPlayerOrder(cleaned, cleaned[0]?.id);
 
     // Pick random word and assign roles
     const activeWord = pickRandomWord(settings.selectedCategories);
@@ -298,11 +237,13 @@ export const useGameStore = create<GameState & GameStoreActions>()(
     // Index 0 (startingPlayer) is guaranteed to be a Citizen by assignRoles!
     const { players: assignedPlayers, impostorIds, impostorId } = assignRoles(playersToUse, chosenCount);
 
+    // Pre-calculate randomized voting order starting with a random person (different from role reveal starter)
+    const initialVotingOrder = getRandomPlayerOrder(assignedPlayers, assignedPlayers[0]?.id);
+
     playClickSound(soundEnabled);
 
     set({
       players: assignedPlayers,
-      startingPlayerId: startingPlayer.id,
       activeWord,
       impostorId,
       impostorIds,
@@ -310,6 +251,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
       clues: [],
       currentCluePlayerIndex: 0,
       votes: {},
+      votingOrder: initialVotingOrder,
       currentVoterIndex: 0,
       eliminatedPlayerId: null,
       impostorGuess: '',
@@ -326,10 +268,13 @@ export const useGameStore = create<GameState & GameStoreActions>()(
     if (currentRoleRevealIndex + 1 < players.length) {
       set({ currentRoleRevealIndex: currentRoleRevealIndex + 1 });
     } else {
-      // Everyone has seen their secret role -> Move directly to voting!
+      // Everyone has viewed their secret role -> Start with a random person for poll (guaranteed different from role reveal starter)!
+      const votingOrder = getRandomPlayerOrder(players, players[0]?.id);
+
       set({
         phase: 'voting',
         votes: {},
+        votingOrder,
         currentVoterIndex: 0,
       });
     }
@@ -367,24 +312,27 @@ export const useGameStore = create<GameState & GameStoreActions>()(
   },
 
   startVoting: () => {
-    const { soundEnabled } = get();
+    const { soundEnabled, players } = get();
     playClickSound(soundEnabled);
+    const votingOrder = getRandomPlayerOrder(players, players[0]?.id);
     set({
       phase: 'voting',
       votes: {},
+      votingOrder,
       currentVoterIndex: 0,
     });
   },
 
   castVote: (targetId) => {
-    const { currentVoterIndex, players, votes, soundEnabled } = get();
-    const currentVoter = players[currentVoterIndex];
+    const { currentVoterIndex, votingOrder, players, votes, soundEnabled } = get();
+    const voters = votingOrder && votingOrder.length > 0 ? votingOrder : players;
+    const currentVoter = voters[currentVoterIndex];
     if (!currentVoter) return;
 
     playVoteSound(soundEnabled);
     const newVotes = { ...votes, [currentVoter.id]: targetId };
 
-    if (currentVoterIndex + 1 < players.length) {
+    if (currentVoterIndex + 1 < voters.length) {
       set({
         votes: newVotes,
         currentVoterIndex: currentVoterIndex + 1,
@@ -486,6 +434,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
         clues: [],
         currentCluePlayerIndex: 0,
         votes: {},
+        votingOrder: [],
         currentVoterIndex: 0,
         eliminatedPlayerId: null,
         impostorGuess: '',
@@ -508,6 +457,7 @@ export const useGameStore = create<GameState & GameStoreActions>()(
       clues: [],
       currentCluePlayerIndex: 0,
       votes: {},
+      votingOrder: [],
       currentVoterIndex: 0,
       eliminatedPlayerId: null,
       impostorGuess: '',

@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
-import { StartingPlayerModal } from '../components/StartingPlayerModal';
 import { WORD_EMOJIS, CATEGORY_EMOJIS } from '../data/words';
 import confetti from 'canvas-confetti';
 import { motion } from 'framer-motion';
@@ -19,13 +18,10 @@ export const Winner = () => {
     votes,
     impostorGuess,
     impostorGuessCorrect,
-    startNewGame,
+    playAgain,
     resetToHome,
     setPhase,
-    settings,
   } = useGameStore();
-
-  const [isStartingPlayerModalOpen, setIsStartingPlayerModalOpen] = useState(false);
 
   useEffect(() => {
     // Launch celebratory confetti
@@ -208,7 +204,7 @@ export const Winner = () => {
         className="space-y-2.5 mt-4"
       >
         <button
-          onClick={() => setIsStartingPlayerModalOpen(true)}
+          onClick={() => playAgain(true)}
           className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-base tracking-wider shadow-xl shadow-purple-600/30 transition-all border border-white/20 flex items-center justify-center gap-2 active:scale-95"
         >
           <RotateCcw size={19} />
@@ -233,18 +229,6 @@ export const Winner = () => {
           </button>
         </div>
       </motion.div>
-
-      {/* Starting Player Selection Modal */}
-      <StartingPlayerModal
-        isOpen={isStartingPlayerModalOpen}
-        onClose={() => setIsStartingPlayerModalOpen(false)}
-        players={players}
-        selectedStarterId={settings.startingPlayerId || (settings.randomStartingPlayer ? 'random' : null)}
-        onSelectStarter={(starterId) => {
-          setIsStartingPlayerModalOpen(false);
-          startNewGame(starterId);
-        }}
-      />
     </div>
   );
 };

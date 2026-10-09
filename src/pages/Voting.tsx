@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Vote, Check, Shield, AlertCircle, ArrowRight } from 'lucide-react';
+import { Vote, Check, Shield, AlertCircle, ArrowRight, Dices } from 'lucide-react';
 
 export const Voting = () => {
   const {
     players,
+    votingOrder,
     currentVoterIndex,
     castVote,
   } = useGameStore();
@@ -15,10 +16,11 @@ export const Voting = () => {
   const [hasConfirmedPhone, setHasConfirmedPhone] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const currentVoter = players[currentVoterIndex];
+  const voters = votingOrder && votingOrder.length > 0 ? votingOrder : players;
+  const currentVoter = voters[currentVoterIndex];
   if (!currentVoter) return null;
 
-  const isLastVoter = currentVoterIndex === players.length - 1;
+  const isLastVoter = currentVoterIndex === voters.length - 1;
 
   const handleConfirmVote = () => {
     if (!selectedTargetId) {
@@ -41,7 +43,7 @@ export const Voting = () => {
             <Vote size={13} /> Secret Ballot
           </span>
           <span className="text-xs font-bold text-slate-400">
-            Vote {currentVoterIndex + 1} of {players.length}
+            Vote {currentVoterIndex + 1} of {voters.length}
           </span>
         </div>
 
@@ -72,6 +74,13 @@ export const Voting = () => {
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
                 Pass Device To
               </span>
+
+              {currentVoterIndex === 0 && (
+                <span className="mb-2 text-[11px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                  <Dices size={13} className="text-amber-400" />
+                  <span>Randomly Chosen to Start Poll!</span>
+                </span>
+              )}
 
               <div className="flex items-center gap-3 mb-3">
                 <PlayerAvatar
@@ -116,9 +125,16 @@ export const Voting = () => {
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       Voting as
                     </span>
-                    <span className="text-sm font-extrabold text-white">
-                      {currentVoter.name}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-extrabold text-white">
+                        {currentVoter.name}
+                      </span>
+                      {currentVoterIndex === 0 && (
+                        <span className="text-[9px] font-black uppercase text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.5 rounded-md flex items-center gap-1">
+                          <Dices size={10} className="text-amber-400" /> Starts Poll
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <span className="text-xs text-rose-300 font-semibold bg-rose-500/10 px-2.5 py-1 rounded-full border border-rose-500/20">

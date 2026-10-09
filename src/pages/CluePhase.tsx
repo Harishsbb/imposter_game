@@ -14,7 +14,6 @@ export const CluePhase = () => {
     startVoting,
     activeWord,
     impostorId,
-    settings,
   } = useGameStore();
 
   const [clueInput, setClueInput] = useState('');
@@ -64,7 +63,7 @@ export const CluePhase = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 flex items-center gap-1.5">
               <MessageSquare size={13} /> Clue Phase
             </span>
-            {settings.randomStartingPlayer && currentCluePlayerIndex === 0 && (
+            {currentCluePlayerIndex === 0 && (
               <span className="text-[10px] font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                 <Dices size={12} className="text-amber-400" />
                 <span>Starts Round</span>
@@ -115,9 +114,9 @@ export const CluePhase = () => {
             />
             <div className="text-left">
               <span className="text-[11px] font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1">
-                {currentCluePlayerIndex === 0 && settings.randomStartingPlayer ? (
+                {currentCluePlayerIndex === 0 ? (
                   <span className="text-amber-400 font-extrabold flex items-center gap-1">
-                    <Dices size={12} /> Randomly Chosen to Start!
+                    <Dices size={12} /> Starts the Round!
                   </span>
                 ) : (
                   <span>It's your turn</span>

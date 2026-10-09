@@ -2,10 +2,9 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { PlayerAvatar } from '../components/PlayerAvatar';
-import { StartingPlayerModal } from '../components/StartingPlayerModal';
 import { SUGGESTED_NAMES, getMaxImpostors } from '../utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff, Dices, UserX, UserCheck } from 'lucide-react';
+import { ArrowLeft, UserPlus, Play, Trash2, Edit2, Check, AlertCircle, Shuffle, Lightbulb, EyeOff, UserX } from 'lucide-react';
 
 export const Lobby = () => {
   const {
@@ -25,7 +24,6 @@ export const Lobby = () => {
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [isStartingPlayerModalOpen, setIsStartingPlayerModalOpen] = useState(false);
 
   const handleAddPlayer = (e?: FormEvent) => {
     if (e) e.preventDefault();
@@ -89,13 +87,7 @@ export const Lobby = () => {
       setEditingPlayerId(null);
       setEditingName('');
     }
-    // Ask user which player should start or give option to start at random
-    setIsStartingPlayerModalOpen(true);
-  };
-
-  const handleSelectStarter = (starterId: string | 'random') => {
-    setIsStartingPlayerModalOpen(false);
-    startNewGame(starterId);
+    startNewGame();
   };
 
   const canStart = players.length >= 3 && players.length <= 12;
@@ -362,7 +354,7 @@ export const Lobby = () => {
       </div>
 
       {/* Impostor Hint Enable/Hide Option Card */}
-      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-4 flex items-center justify-between shadow-lg">
+      <div className="glass-card p-4 rounded-3xl border border-white/10 mb-5 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
           <div
             className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-lg border transition-all ${
@@ -415,76 +407,6 @@ export const Lobby = () => {
         </button>
       </div>
 
-      {/* Starting Player Selection Card */}
-      {(() => {
-        const designatedPlayer = settings.startingPlayerId
-          ? players.find((p) => p.id === settings.startingPlayerId)
-          : null;
-        return (
-          <div
-            onClick={() => setIsStartingPlayerModalOpen(true)}
-            className="glass-card p-4 rounded-3xl border border-white/10 mb-5 flex items-center justify-between shadow-lg cursor-pointer hover:border-purple-500/40 transition-all group"
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-lg border transition-all ${
-                  designatedPlayer
-                    ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
-                    : settings.randomStartingPlayer
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
-                    : 'bg-slate-800 text-slate-400 border-white/10'
-                }`}
-              >
-                {designatedPlayer ? (
-                  <UserCheck size={22} className="text-indigo-400" />
-                ) : (
-                  <Dices size={22} className="group-hover:rotate-12 transition-transform" />
-                )}
-              </div>
-              <div className="text-left">
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-extrabold text-white">Starting Player</h4>
-                  <span
-                    className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
-                      designatedPlayer
-                        ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
-                        : settings.randomStartingPlayer
-                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                        : 'bg-slate-800 text-slate-400 border border-white/10'
-                    }`}
-                  >
-                    {designatedPlayer
-                      ? `${designatedPlayer.name}`
-                      : settings.randomStartingPlayer
-                      ? 'Random 🎲'
-                      : 'Fixed Order'}
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-400 mt-0.5 max-w-[240px] sm:max-w-xs">
-                  {designatedPlayer
-                    ? `${designatedPlayer.name} will give first clue aloud (guaranteed Citizen)`
-                    : settings.randomStartingPlayer
-                    ? 'Round begins with a random Citizen (tap to choose)'
-                    : 'Round begins with Player 1 (tap to choose)'}
-                </p>
-              </div>
-            </div>
-
-            {/* Tap to customize button */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsStartingPlayerModalOpen(true);
-              }}
-              className="py-1.5 px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 text-xs font-bold transition-all group-hover:scale-105 active:scale-95"
-            >
-              Choose
-            </button>
-          </div>
-        );
-      })()}
-
       {/* Start Game Action Button */}
       <motion.div whileHover={{ scale: canStart ? 1.01 : 1 }} whileTap={{ scale: canStart ? 0.99 : 1 }}>
         <button
@@ -496,15 +418,6 @@ export const Lobby = () => {
           <span>START GAME</span>
         </button>
       </motion.div>
-
-      {/* Starting Player Selection Modal */}
-      <StartingPlayerModal
-        isOpen={isStartingPlayerModalOpen}
-        onClose={() => setIsStartingPlayerModalOpen(false)}
-        players={players}
-        selectedStarterId={settings.startingPlayerId || (settings.randomStartingPlayer ? 'random' : null)}
-        onSelectStarter={handleSelectStarter}
-      />
     </div>
   );
 };

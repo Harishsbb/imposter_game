@@ -51,16 +51,13 @@ export interface GameSettings {
   gameMode: 'classic';
   discussionTimerSeconds: number;
   showImpostorHint: boolean;
-  randomStartingPlayer: boolean;
   impostorCount: number;
-  startingPlayerId?: string | null;
 }
 
 export interface GameState {
   phase: GamePhase;
   settings: GameSettings;
   players: Player[];
-  startingPlayerId: string | null;
   activeWord: WordEntry | null;
   impostorId: string | null;
   impostorIds: string[];
@@ -68,6 +65,7 @@ export interface GameState {
   clues: ClueEntry[];
   currentCluePlayerIndex: number;
   votes: Record<string, string>; // voterId -> targetId
+  votingOrder: Player[];
   currentVoterIndex: number;
   eliminatedPlayerId: string | null;
   impostorGuess: string;
